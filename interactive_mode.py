@@ -5,6 +5,7 @@ from record_manager import RecordManager
 from models import Member, Provider, Service, ServiceRecord
 import re
 from constants import (
+    DATABASE_URL,
     NAME_MIN_LEN, NAME_MAX_LEN, 
     STREET_MIN_LEN, STREET_MAX_LEN, 
     CITY_MIN_LEN, CITY_MAX_LEN, 
@@ -15,8 +16,8 @@ from constants import (
 )
 
 class InteractiveMode:
-    def __init__(self):
-        self.db_manager = DatabaseManager()
+    def __init__(self, db_url=None):
+        self.db_manager = DatabaseManager(db_url or DATABASE_URL)
         self.member_manager = MemberManager(self.db_manager)
         self.provider_manager = ProviderManager(self.db_manager)
         self.service_manager = ServiceManager(self.db_manager)
@@ -72,7 +73,7 @@ class InteractiveMode:
         )
         return name, float(fee)
     
-    def manager_menu(self):
+    def menu(self):
         print("\n--- Interactive Mode ---")
         print(" [1] Add a member")
         print(" [2] Update a member")
