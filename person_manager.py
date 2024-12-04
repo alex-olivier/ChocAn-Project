@@ -1,19 +1,21 @@
 from database_manager import DatabaseManager
+from models import Member, Provider
 import re
 
 # Handles Person Management
 class PersonManager:
-    def __init__(self, db_manager):
+    def __init__(self, db_manager : DatabaseManager):
         self.db_manager = db_manager
 
     def add_person(self, person_class, name, street_address, city, state, zip_code):
         with self.db_manager.get_session() as session:
-            new_person = person_class(name=name,
-                                     street_address=street_address,
-                                     city=city,
-                                     state=state,
-                                     zip_code=zip_code)
-
+            new_person = person_class(
+                name=name, 
+                street_address=street_address, 
+                city=city, 
+                state=state, 
+                zip_code=zip_code
+            )
             session.add(new_person)
             print(f"Added {person_class.__name__.lower()}: {name}")
 
@@ -40,4 +42,49 @@ class PersonManager:
             session.delete(person)
             print(f"Deleted {person_class.__name__.lower()} with id {person_id}")
 
+# Member Manager
+class MemberManager(PersonManager):
+    def __init__(self, db_manager):
+        super().__init__(db_manager)
+    
+    def add_member(self, name, street_address, city, state, zip_code):
+        super().add_person(Member, name, street_address, city, state, zip_code)
 
+    def update_member(self, member_id, **kwargs):
+        super().update_person(Member, member_id, **kwargs)
+
+    def delete_member(self, member_id):
+        super().delete_person(Member, member_id)
+
+# Provider Manager
+class ProviderManager(PersonManager):
+    def __init__(self, db_manager):
+        super().__init__(db_manager)
+
+    def add_provider(self, name, street_address, city, state, zip_code):
+        super().add_person(Provider, name, street_address, city, state, zip_code)
+
+    def update_provider(self, provider_id, **kwargs):
+        super().update_person(Provider, provider_id, **kwargs)
+
+    def delete_provider(self, provider_id):
+        super().delete_person(Provider, provider_id)
+
+# # From main.py - Delete when done
+# def add_member(name, street_address, city, state, zip_code):
+#     try:
+#         new_member = Member(name=name, street_address=street_address, city=city, state=state, zip_code=zip_code)
+#         session.add(new_member)  # Triggers validation
+#         session.commit()
+#         print(f"Added member: {name}")
+#     except ValueError as e:
+#         print(e)
+
+# def add_provider(name, street_address, city, state, zip_code):
+#     try:
+#         new_provider = Provider(name=name, street_address=street_address, city=city, state=state, zip_code=zip_code)
+#         session.add(new_provider)
+#         session.commit()
+#         print(f"Added provider: {name}")
+#     except ValueError as e:
+#         print(e)

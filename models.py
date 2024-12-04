@@ -67,8 +67,6 @@ class Member(Person):
     __tablename__ = 'members'
 
     is_active = Column(Boolean, nullable=False)
-    
-    service_records = relationship('ServiceRecord', back_populates='member')
 
     __table_args__ = (
         CheckConstraint("is_active IN (0, 1)", name="check_is_active_boolean"),
@@ -79,6 +77,8 @@ class Member(Person):
         'polymorphic_identity': 'member'
     }
 
+    service_records = relationship('ServiceRecord', back_populates='member')
+
     def __repr__(self):
         parent_repr = super().__repr__()
         return parent_repr[:-1] + f", is_active={self.is_active})"
@@ -86,9 +86,6 @@ class Member(Person):
 
 class Provider(Person):
     __tablename__ = 'providers'
-
-    service_records = relationship('ServiceRecord', back_populates='provider')
-    provider_services = relationship('ProviderService', back_populates='provider')
 
     __table_args__ = (
         UniqueConstraint('name', 'street_address', 'city', 'state', 'zip_code', name='unique_provider'),
@@ -98,6 +95,9 @@ class Provider(Person):
         'polymorphic_identity': 'provider'
     }
 
+    service_records = relationship('ServiceRecord', back_populates='provider')
+    provider_services = relationship('ProviderService', back_populates='provider')
+
 
 class Service(Base):
     __tablename__ = 'services'
@@ -106,15 +106,15 @@ class Service(Base):
     code = Column(String(SERVICE_CODE_LEN), unique=True, nullable=True)
     name = Column(String(SERVICE_NAME_MAX_LEN), nullable=False)
     fee = Column(Float, nullable=False)
-    
-    provider_services = relationship('ProviderService', back_populates='service')
-    service_records = relationship('ServiceRecord', back_populates='service')
 
     __table_args__ = (
         CheckConstraint(f"length(name) <= {SERVICE_NAME_MAX_LEN}", name="check_service_name_length"),
         CheckConstraint(f"fee < {SERVICE_FEE_MAX}", name="check_service_fee_limit"),
         UniqueConstraint('name', 'fee', name='unique_service'),
     )
+    
+    provider_services = relationship('ProviderService', back_populates='service')
+    service_records = relationship('ServiceRecord', back_populates='service')
 
     def __repr__(self):
         return ("{self.__class__.__name__}(code='{self.code}', " \
@@ -143,13 +143,12 @@ class ServiceRecord(Base):
     timestamp = Column(DateTime, nullable=False, default=func.now())  # Automatically generate timestamp
     comments = Column(String(COMMENT_MAX_LEN))
 
-    provider = relationship('Provider', back_populates='service_records')
-    member = relationship('Member', back_populates='service_records')
-    service = relationship('Service', back_populates='service_records')
-
-
     __table_args__ = (
         CheckConstraint(f"length(comments) <= {COMMENT_MAX_LEN}", name="check_comments_length"),
         CheckConstraint("date_of_service <= CURRENT_TIMESTAMP", name="check_date_of_service_not_future"),
         UniqueConstraint('provider_id', 'member_id', 'service_id', 'date_of_service', name='unique_service_record'),
     )
+
+    provider = relationship('Provider', back_populates='service_records')
+    member = relationship('Member', back_populates='service_records')
+    service = relationship('Service', back_populates='service_records')
