@@ -132,7 +132,6 @@ class InteractiveMode:
             print("Member deleted.")
         elif choice == "4":  # View Members
             member_manager.view_members()
-            pass
         elif choice == "5":
             print("Exiting... Goodbye!")
         else:
@@ -161,24 +160,25 @@ class InteractiveMode:
             provider_manager.add_provider(name, street_address, city, state, zip_code)
             print("Provider added.")
         elif choice == "2":  # Update a provider
-            provider_id = input("Enter provider ID to update: ")
-            name = input("Enter new provider name: ")
-            number = input("Enter new provider number: ")
-            address = input("Enter new address: ")
-            city = input("Enter new city: ")
-            state = input("Enter new state: ")
-            zip_code = input("Enter new zip code: ")
-
-            name, street_address, city, state, zip_code = self.prompt_person_details()
-            provider_manager.update_provider(provider_id, name, number, address, city, state, zip_code)
+            provider_id = prompt_until_valid(
+                r'^\d{9}$',
+                "Enter provider ID to update: ",
+                "Provider ID must be 9 digits."
+            )
+            # TODO: Implement ability for user to update specific fields
+            kwargs = {}
+            provider_manager.update_member(provider_id, kwargs)
             print("Provider updated.")
         elif choice == "3":  # Delete a provider
-            provider_id = input("Enter provider ID to delete: ")
+            provider_id = prompt_until_valid(
+                r'^\d{9}$',
+                "Enter provider ID to delete: ",
+                "Provider ID must be 9 digits."
+            )
             provider_manager.delete_provider(provider_id)
             print("Provider deleted.")
         elif choice == "4":  # View Providers
-            # provider_manager.view_providers()
-            pass  
+            provider_manager.view_providers()
         elif choice == "5":
             print("Exiting... Goodbye!")
         else:
@@ -213,7 +213,7 @@ class InteractiveMode:
             # service_manager.delete_service()
             pass
         elif choice == "4":  # View Services
-            # service_manager.view_services()
+            service_manager.view_services()
             pass
         elif choice == "5":
             print("Exiting... Goodbye!")

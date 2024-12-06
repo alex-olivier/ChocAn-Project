@@ -44,8 +44,7 @@ def set_person_number(_mapper, connection, target):
     if target.id is not None:
         target.number = f"{target.id:09d}"
         connection.execute(
-            target.__table__
-            .update().where(
+            target.__table__.update().where(
                 target.__table__.c.id == target.id
             ).values(
                 number=target.number
@@ -58,7 +57,9 @@ def set_service_code(_mapper, connection, target):
     if target.id is not None:
         target.code = f"{target.id:06d}"
         connection.execute(
-            target.__table__.update()
-            .where(target.__table__.c.id == target.id)
-            .values(code=target.code)
+            target.__table__.update().where(
+                target.__table__.c.id == target.id
+            ).values(
+                code=target.code
+            )
         )

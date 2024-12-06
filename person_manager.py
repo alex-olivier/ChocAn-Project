@@ -51,6 +51,12 @@ class PersonManager:
 
             session.delete(person)
             print(f"Deleted {person_class.__name__.lower()} with id {person_id}")
+        
+    def view_persons(self, person_class):
+        with self.db_manager.get_session() as session:
+            persons = session.query(person_class).all()
+            for person in persons:
+                print(f"{person.number}: {person.name}")
 
 # Member Manager
 class MemberManager(PersonManager):
@@ -66,8 +72,8 @@ class MemberManager(PersonManager):
     def delete_member(self, member_id):
         super().delete_person(Member, member_id)
 
-    def validate_member_number(self, member_number):
-        return re.match(r'^\d{9}$', member_number)
+    def view_members(self):
+        super().view_persons(Member)
 
 # Provider Manager
 class ProviderManager(PersonManager):
@@ -82,6 +88,9 @@ class ProviderManager(PersonManager):
 
     def delete_provider(self, provider_id):
         super().delete_person(Provider, provider_id)
+
+    def view_providers(self):
+        super().view_persons(Provider)
 
 # # From main.py - Delete when done
 # def add_member(name, street_address, city, state, zip_code):

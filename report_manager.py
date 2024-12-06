@@ -136,39 +136,40 @@ class ReportManager:
             print(f"Provider report generated: {report_filename}")
 
 
-    # Summary Report for Manager
-    def generate_summary_report(self):
-        """
-        A summary report is given to the manager for accounts payable.
-        The report lists every provider to be paid that week, the number
-        of consultations each had, and his or her total fee for that week.
-        Finally the total number of providers who provided services, the
-        total number of consultations, and the overall fee total are printed.
-        """
-        with self.db_manager.get_session() as session:
-            providers = session.query(Provider).all()
-            total_providers = len(providers)
-            total_consultations = 0
-            total_fee = 0
+    # # Summary Report for Manager
+    # def generate_summary_report(self):
+    #     """
+    #     A summary report is given to the manager for accounts payable.
+    #     The report lists every provider to be paid that week, the number
+    #     of consultations each had, and his or her total fee for that week.
+    #     Finally the total number of providers who provided services, the
+    #     total number of consultations, and the overall fee total are printed.
+    #     """
+    #     with self.db_manager.get_session() as session:
+    #         providers = session.query(Provider).all()
+    #         total_providers = len(providers)
+    #         total_consultations = 0
+    #         total_fee = 0
 
-            for provider in providers:
-                records = session.query(
-                    ServiceRecord
-                ).filter_by(
-                    provider_id=provider.id
-                ).all()
-                total_consultations += len(records)
-                total_fee += sum(
-                    session.query(
-                        Service
-                    ).filter_by(
-                        code=record.service_code
-                    ).first().fee for record in records
-                )
+    #         for provider in providers:
+    #             records = session.query(
+    #                 ServiceRecord
+    #             ).filter_by(
+    #                 provider_id=provider.id
+    #             ).all()
+    #             total_consultations += len(records)
+    #             total_fee += sum(
+    #                 session.query(
+    #                     Service
+    #                 ).filter_by(
+    #                     code=record.service_code
+    #                 ).first().fee for record in records
+    #             )
 
-            report_filename = f"Manager_Summary_{datetime.now().strftime('%Y%m%d')}.txt"
-            with open(report_filename, 'w') as file:
-                file.write(f"Total Providers: {total_providers}\n")
-                file.write(f"Total Consultations: {total_consultations}\n")
-                file.write(f"Total Fee: ${total_fee:.2f}\n")
-            print(f"Manager summary report generated: {report_filename}")
+    #         report_filename = f"Manager_Summary_{datetime.now().strftime('%Y%m%d')}.txt"
+    #         with open(report_filename, 'w') as file:
+    #             file.write("Accounts Payable Summary Report:\n")
+    #             file.write(f"Total Providers: {total_providers}\n")
+    #             file.write(f"Total Consultations: {total_consultations}\n")
+    #             file.write(f"Total Fee: ${total_fee:.2f}\n")
+    #         print(f"Manager summary report generated: {report_filename}")
