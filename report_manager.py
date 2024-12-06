@@ -1,6 +1,6 @@
 from database_manager import DatabaseManager, get_session
 from models import Member, Provider, Service, ServiceRecord
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 
@@ -101,75 +101,119 @@ class ReportManager:
             if not provider:
                 print("Invalid provider number.")
                 return
+            
+            one_week_ago = datetime.now() - timedelta(weeks=1)
+            records = session.query(ServiceRecord).filter(
+                ServiceRecord.provider_id == provider.id,
+                ServiceRecord.date_of_service >= one_week_ago
+            ).order_by(ServiceRecord.timestamp).all()
 
-            records = session.query(ServiceRecord).filter_by(provider_id=provider.id).order_by(ServiceRecord.timestamp).all()
             if not records:
-                print("No services recorded for this provider.")
+                print("No services recorded for this provider in the past week.")
                 return
 
             report_filename = f"{provider.name.replace(' ', '_')}_ \
                               {datetime.now().strftime('%Y%m%d')}_ \
                               ProviderReport.txt"
             with open(report_filename, 'w') as file:
-                file.write(f"Provider Name: {provider.name}\n")
-                file.write(f"Provider Number: {provider.number}\n")
                 file.write(
+                    f"Provider Name: {provider.name}\n"
+                    f"Provider Number: {provider.number}\n"
                     f"Address: {provider.street_address}, "
                     f"{provider.city}, "
                     f"{provider.state} "
                     f"{provider.zip_code}\n\n"
                 )
                 file.write("Services Provided:\n")
-                total_fee = 0
+                total_weekly_fee = 0
                 for record in records:
                     member = session.query(Member).get(record.member_id)
                     service = session.query(Service).filter_by(code=record.service_code).first()
-                    total_fee += service.fee
+                    total_weekly_fee += service.fee
                     file.write(
-                        f"Date: {record.service_date.strftime('%m-%d-%Y')}\n" 
-                        f"Member: {member.name}\n" 
-                        f"Service: {service.name}\n" 
-                        f"Fee: ${service.fee:.2f}\n\n"
+                        f"Date of service: {record.service_date.strftime('%m-%d-%Y')}\n" 
+                        f"Database timestamp: {record.timestamp.strftime('%m-%d-%Y %H:%M:%S')}\n"
+                        f"Member name: {member.name}\n"
+                        f"Member number: {member.number}\n"
+                        f"Service code: {service.name}\n" 
+                        f"Service fee: ${service.fee:.2f}\n\n"
                     )
                 file.write(f"\nTotal Consultations: {len(records)}\n")
-                file.write(f"Total Fee: ${total_fee:.2f}\n")
+                file.write(f"Total Fee: ${total_weekly_fee:.2f}\n")
             print(f"Provider report generated: {report_filename}")
 
 
-    # # Summary Report for Manager
-    # def generate_summary_report(self):
-    #     """
-    #     A summary report is given to the manager for accounts payable.
-    #     The report lists every provider to be paid that week, the number
-    #     of consultations each had, and his or her total fee for that week.
-    #     Finally the total number of providers who provided services, the
-    #     total number of consultations, and the overall fee total are printed.
-    #     """
-    #     with self.db_manager.get_session() as session:
-    #         providers = session.query(Provider).all()
-    #         total_providers = len(providers)
-    #         total_consultations = 0
-    #         total_fee = 0
+    # Accounts Payable Summary Report for Manager
+    def generate_summary_report(self):
+        """
+        A summary report is given to the manager for accounts payable.
+        The report lists every provider to be paid that week.
+        """
+        with self.db_manager.get_session() as session:
+            providers = session.query(Provider).all()
+            total_providers = 0
+            total_consultations = 0
+            total_fees = 0
+            
+            one_week_ago = datetime.now() - timedelta(weeks=1)
+            report_filename = f"Manager_Summary_{datetime.now().strftime('%Y%m%d')}.txt"
+            with open(report_filename, 'w') as file:
+                file.write(
+                    "╔════════════════════════════════╗\n"
+                    "║ Chocoholics Anonymous (ChocAn) ║\n"
+                    "╚════════════════════════════════╝\n"
+                    "Accounts Payable Weekly Summary Report\n"
+                    f"WEEK OF: {one_week_ago.strftime('%m-%d-%Y')}\n\n"
+                    "────────────┬───────────────────────────┬───────┬───────────\n"
+                    " PROVIDER # │ PROVIDER NAME             │ CONS¹ │ FEE TOTAL\n"
+                    "────────────┼───────────────────────────┼───────┼───────────\n"
+                )
+                for provider in providers:
+                    records = session.query(ServiceRecord).filter(
+                        ServiceRecord.provider_id == provider.id,
+                        ServiceRecord.timestamp >= one_week_ago
+                    ).order_by(ServiceRecord.timestamp).all()
+                    record_count = len(records)
+                    if record_count != 0:
+                        for record in records:
+                            fee_total += session.query(Service).filter_by(
+                                code=record.service_code
+                            ).first().fee
+                        file.write(f" {provider.number:>9}  │ {provider.name:<25} │  {record_count:>3}  │ $ {fee_total:>8.2f}\n")
+                        total_providers += 1
+                        total_consultations += len(records)
+                        total_fees += fee_total
+                file.write(
+                    "────────────┴───────────────────────────┴───────┴───────────\n"
+                    " ¹: Consultationss\n\n"
+                    f"Total Providers...................... {total_providers}\n"
+                    f"Total Consultations.................. {total_consultations}\n"
+                    f"Total Fees........................... $ {total_fees:.2f}\n"
+                )
+            print(f"Manager summary report generated: {report_filename}")
 
-    #         for provider in providers:
-    #             records = session.query(
-    #                 ServiceRecord
-    #             ).filter_by(
-    #                 provider_id=provider.id
-    #             ).all()
-    #             total_consultations += len(records)
-    #             total_fee += sum(
-    #                 session.query(
-    #                     Service
-    #                 ).filter_by(
-    #                     code=record.service_code
-    #                 ).first().fee for record in records
-    #             )
 
-    #         report_filename = f"Manager_Summary_{datetime.now().strftime('%Y%m%d')}.txt"
-    #         with open(report_filename, 'w') as file:
-    #             file.write("Accounts Payable Summary Report:\n")
-    #             file.write(f"Total Providers: {total_providers}\n")
-    #             file.write(f"Total Consultations: {total_consultations}\n")
-    #             file.write(f"Total Fee: ${total_fee:.2f}\n")
-    #         print(f"Manager summary report generated: {report_filename}")
+"""
+file.write("╔════════════════════════════════╗\n")
+file.write("║ Chocoholics Anonymous (ChocAn) ║\n")
+file.write("╚════════════════════════════════╝\n")
+file.write("Accounts Payable Weekly Summary Report\n")
+file.write("WEEK OF: 01-01-2021\n\n")
+file.write("────────────┬───────────────────────────┬───────┬───────────\n")
+file.write(" PROVIDER # │ PROVIDER NAME             │ CONS¹ │ FEE TOTAL\n")
+file.write("────────────┼───────────────────────────┼───────┼───────────\n")
+file.write(f" {provider_number:>9}  │ {provider_name:<25} │  {consultations:>3}  │ $ {weekly_fee:>8.2f}\n")
+file.write("────────────┴───────────────────────────┴───────┴───────────\n")
+file.write(" ¹: Consultationss\n\n")
+file.write(f"Weekly Total Providers...................... {total_providers}\n")
+file.write(f"Weekly Total Consultations.................. {total_consultations}\n")
+file.write(f"Weekly Total Fee............................ $ {total_fee:.2f}\n")
+ 
+
+ 123456789  │ John Smith                │   20  │ $  1500.00
+ 987654321  │ Mary Johnson              │   30  │ $  2800.00
+ 456789123  │ Robert Brown              │   12  │ $   850.00
+ 999999999  │ MaximumPossibleNameLength │  999  │ $ 99999.99
+ 999999999  │ Short Name                │    1  │ $     0.01
+
+"""
