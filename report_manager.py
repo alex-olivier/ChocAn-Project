@@ -3,7 +3,6 @@ from models import Member, Provider, Service, ServiceRecord
 from datetime import datetime, timedelta
 
 
-
 class ReportManager:
     def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager

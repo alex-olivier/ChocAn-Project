@@ -5,7 +5,9 @@
 from models import (
     models, Base, Member, Provider, Service, ProviderService, ServiceRecord
 )
-from interactive_mode import InteractiveMode, interactive_mode
+from interactive_mode import InteractiveMode
+from manager_terminal import ManagerTerminal
+from provider_terminal import ProviderTerminal
 # from database_manager import DatabaseManager, get_session
 
 from input_validation import prompt_until_valid
@@ -27,12 +29,11 @@ def main_menu():
             "Invalid choice. Please try again."
         )
         if choice == "1":
-            interactive_mode = InteractiveMode()
-            interactive_mode.main_menu()
+            InteractiveMode().main_menu()
         elif choice == "2":
-            provider_terminal()
+            ProviderTerminal().main_menu()
         elif choice == "3":
-            manager_terminal()
+            ManagerTerminal().main_menu()
         elif choice == "4":
             print("Exiting... Goodbye!")
         else:
