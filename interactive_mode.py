@@ -67,7 +67,7 @@ class InteractiveMode:
             "Service name must be up to 25 characters)."
         )
         fee = self.prompt_until_valid(
-            r'^\d{1,3}(\.\d{1,2})?$'
+            r'^\d{1,3}(\.\d{1,2})?$'  # 0-999.99 (2 decimal places)
             "Enter service fee: ",
             f"Service fee cannot exceed ${SERVICE_FEE_MAX})."
         )
@@ -75,38 +75,120 @@ class InteractiveMode:
     
     def menu(self):
         print("\n--- Interactive Mode ---")
-        print(" [1] Add a member")
-        print(" [2] Update a member")
-        print(" [3] Delete a member")
-        print(" [4] Add a provider")
-        print(" [5] Update a provider")
-        print(" [6] Delete a provider")
-        print(" [7] Add a service")
-        print(" [8] Update a service")
-        print(" [9] Delete a service")
-        print("[10] View weekly reports")
+        print(" [1] Add Member")
+        print(" [2] Update Member")
+        print(" [3] Delete Member")
+        print(" [4] Add Provider")
+        print(" [5] Update Provider")
+        print(" [6] Delete Provider")
+        print(" [7] Add Service")
+        print(" [8] Update Service")
+        print(" [9] Delete Service")
+        print("[10] View Weekly Reports")
         print("[11] Exit")
+
+        """
+        Menu Design Example #1:
+        ---------------------------------------------------
+        Main Menu
+        ---------------------------------------------------
+        Main Menu:
+          1. Interactive Mode
+          2. Provider Terminal
+          3. Manager Terminal
+          4. Exit
+
+        Enter your choice: 1
+
+        ---------------------------------------------------
+        Main Menu > Interactive Mode
+        ---------------------------------------------------
+        Main Menu:
+          Interactive Mode:
+            1. Member Management
+            2. Provider Management
+            3. Service Management
+            4. View Weekly Reports
+            5. Exit
+        
+        Enter your choice: 2
+
+        ---------------------------------------------------
+        Main Menu > Interactive Mode > Provider Management
+        ---------------------------------------------------
+        Main Menu:
+          Interactive Mode:
+            Provider Management:
+              1. Add Provider
+              2. Update Provider
+              3. Delete Provider
+              4. View Providers
+              5. Exit
+    
+        Enter your choice: 5
+
+        Menu Design Example #2:
+        ---------------------------------------------------
+        Main Menu
+        ---------------------------------------------------
+        Main Menu:
+          1. Interactive Mode
+          2. Provider Terminal
+          3. Manager Terminal
+          4. Exit
+
+        Enter your choice: 3
+
+        ---------------------------------------------------
+        Main Menu > Manager Terminal
+        ---------------------------------------------------
+        Main Menu:
+          Manager Terminal:
+            1. Generate Weekly Reports
+            2. Generate EFT Data
+            3. Generate Provider Directory
+            4. Exit
+        
+        Enter your choice: 1
+
+        ---------------------------------------------------
+        Main Menu > Interactive Mode > Provider Management
+        ---------------------------------------------------
+        Main Menu:
+          Manager Terminal:
+            Generate Weekly Reports:
+              1. Generate Memeber Reports
+              2. Update Provider
+              3. Delete Provider
+              4. View Providers
+              5. Exit
+    
+        Enter your choice: 5
+
+        
+        """
+
 
         """
         # Interactive Mode using a Multi-Level Menu
         print("\n--- Interactive Mode ---")
-        print("[1] Manage Members")
-        print(" [1] Add a member")
-        print(" [2] Update a member")
-        print(" [3] Delete a member")
+        print("1. Member Management")
+        print("  1. Add Member")
+        print("  2. Update Member")
+        print("  3. Delete Member")
 
-        print("[2] Manage Providers")
-        print(" [1] Add a provider")
-        print(" [2] Update a provider")
-        print(" [3] Delete a provider")
+        print("2. Provider Management")
+        print("  1. Add Provider")
+        print("  2. Update Provider")
+        print("  3. Delete Provider")
 
-        print("[3] Manage Services")
-        print(" [1] Add a service")
-        print(" [2] Update a service")
-        print(" [3] Delete a service")
+        print("3. Service Management")
+        print("  1. Add Service")
+        print("  2. Update Service")
+        print("  3. Delete Service")
         
-        print("[4] View weekly reports")
-        print("[5] Exit")
+        print("4. View Weekly Reports")
+        print("5. Exit")
         """
         
         choice = input(">> ")
