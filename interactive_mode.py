@@ -3,7 +3,7 @@ from person_manager import MemberManager, ProviderManager
 from service_manager import ServiceManager
 from record_manager import RecordManager
 from models import Member, Provider, Service, ServiceRecord
-import re
+from input_validation import prompt_until_valid
 from constants import (
     DATABASE_URL,
     NAME_MIN_LEN, NAME_MAX_LEN, 
@@ -19,39 +19,29 @@ class InteractiveMode:
     def __init__(self, db_url=None):
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
 
-
-    # Validate user input with retry on failure
-    def prompt_until_valid(regex, prompt_message, error_message) -> str:
-        while True:
-            value = input(prompt_message)
-            if re.match(regex, value):
-                return value
-            print(error_message)
-
-
     # Prompt ChocAn manager/operator for the details of a new member or provider
     def prompt_person_details(self) -> tuple:
-        name = self.prompt_until_valid(
+        name = prompt_until_valid(
             rf'^.{{{NAME_MIN_LEN},{NAME_MAX_LEN}}}$',
             "Enter name: ",
             "Name must be up to 25 characters."
         )
-        street_address = self.prompt_until_valid(
+        street_address = prompt_until_valid(
             rf'^.{{{STREET_MIN_LEN},{STREET_MAX_LEN}}}$',
             "Enter street address: ",
             "Street address must be up to 25 characters."
         )
-        city = self.prompt_until_valid(
+        city = prompt_until_valid(
             rf'^.{{{CITY_MIN_LEN},{CITY_MAX_LEN}}}$',
             "Enter city: ",
             "City must be up to 14 characters."
         )
-        state = self.prompt_until_valid(
+        state = prompt_until_valid(
             rf'^[A-Z]{{{STATE_LEN}}}$',
             "Enter state: ",
             "State must include 2 uppercase letters."
         )
-        zip_code = self.prompt_until_valid(
+        zip_code = prompt_until_valid(
             rf'^\d{{{ZIP_CODE_LEN}}}$',
             "Enter zip code: ",
             "Zip code must include 5 digits."
@@ -61,12 +51,12 @@ class InteractiveMode:
 
     # Prompt ChocAn manager/operator for the details of a new service
     def prompt_service_details(self) -> tuple:
-        name = self.prompt_until_valid(
+        name = prompt_until_valid(
             rf'^.{{{SERVICE_NAME_MIN_LEN},{SERVICE_NAME_MAX_LEN}}}$',
             "Enter service name: ",
             "Service name must be up to 25 characters)."
         )
-        fee = self.prompt_until_valid(
+        fee = prompt_until_valid(
             r'^\d{1,3}(\.\d{1,2})?$'  # 0-999.99 (2 decimal places)
             "Enter service fee: ",
             f"Service fee cannot exceed ${SERVICE_FEE_MAX})."
@@ -76,15 +66,14 @@ class InteractiveMode:
 
     def main_menu(self):
         print("\n---------------------------------------------------")
-        print("Main Menu > Interactive Mode")
+        print("Interactive Mode")
         print("---------------------------------------------------")
-        print("Main Menu:")
-        print("  Interactive Mode:")
-        print("    1. Member Management")
-        print("    2. Provider Management")
-        print("    3. Service Management")
-        print("    4. Exit")
-        choice = self.prompt_until_valid(
+        print("Interactive Mode:")
+        print("  1. Member Management")
+        print("  2. Provider Management")
+        print("  3. Service Management")
+        print("  4. Exit")
+        choice = prompt_until_valid(
             r'^[1-4]$',
             "\nEnter your choice: ",
             "Invalid choice. Please try again."
@@ -104,17 +93,16 @@ class InteractiveMode:
     def member_management(self):
         member_manager = MemberManager(self.db_manager)
         print("\n---------------------------------------------------")
-        print("Main Menu > Interactive Mode > Member Management")
+        print("Interactive Mode > Member Management")
         print("---------------------------------------------------")
-        print("Main Menu:")
-        print("  Interactive Mode:")
-        print("    Member Management:")
-        print("      1. Add Member")
-        print("      2. Update Member")
-        print("      3. Delete Member")
-        print("      4. View Members")
-        print("      5. Exit")
-        choice = self.prompt_until_valid(
+        print("Interactive Mode:")
+        print("  Member Management:")
+        print("    1. Add Member")
+        print("    2. Update Member")
+        print("    3. Delete Member")
+        print("    4. View Members")
+        print("    5. Exit")
+        choice = prompt_until_valid(
             r'^[1-5]$',
             "\nEnter your choice: ",
             "Invalid choice. Please try again."
@@ -124,7 +112,7 @@ class InteractiveMode:
             member_manager.add_member(name, street_address, city, state, zip_code)
         
         elif choice == "2":  # Update a member
-            member_id = self.prompt_until_valid(
+            member_id = prompt_until_valid(
                 r'^\d{9}$',
                 "Enter member ID to update: ",
                 "Member ID must be 9 digits."
@@ -135,7 +123,7 @@ class InteractiveMode:
             print("Member updated.")
         
         elif choice == "3":  # Delete a member
-            member_id = self.prompt_until_valid(
+            member_id = prompt_until_valid(
                 r'^\d{9}$',
                 "Enter member ID to delete: ",
                 "Member ID must be 9 digits."
@@ -154,17 +142,16 @@ class InteractiveMode:
     def provider_management(self):
         provider_manager = ProviderManager(self.db_manager)
         print("\n---------------------------------------------------")
-        print("Main Menu > Interactive Mode > Provider Management")
+        print("Interactive Mode > Provider Management")
         print("---------------------------------------------------")
-        print("Main Menu:")
-        print("  Interactive Mode:")
-        print("    Provider Management:")
-        print("      1. Add Provider")
-        print("      2. Update Provider")
-        print("      3. Delete Provider")
-        print("      4. View Providers")
-        print("      5. Exit")
-        choice = self.prompt_until_valid(
+        print("Interactive Mode:")
+        print("  Provider Management:")
+        print("    1. Add Provider")
+        print("    2. Update Provider")
+        print("    3. Delete Provider")
+        print("    4. View Providers")
+        print("    5. Exit")
+        choice = prompt_until_valid(
             r'^[1-5]$',
             "\nEnter your choice: ",
             "Invalid choice. Please try again."
@@ -201,17 +188,16 @@ class InteractiveMode:
     def service_management(self):
         service_manager = ServiceManager(self.db_manager)
         print("\n---------------------------------------------------")
-        print("Main Menu > Interactive Mode > Service Management")
+        print("Interactive Mode > Service Management")
         print("---------------------------------------------------")
-        print("Main Menu:")
-        print("  Interactive Mode:")
-        print("    Service Management:")
-        print("      1. Add Service")
-        print("      2. Update Service")
-        print("      3. Delete Service")
-        print("      4. View Services")
-        print("      5. Exit")
-        choice = self.prompt_until_valid(
+        print("Interactive Mode:")
+        print("  Service Management:")
+        print("    1. Add Service")
+        print("    2. Update Service")
+        print("    3. Delete Service")
+        print("    4. View Services")
+        print("    5. Exit")
+        choice = prompt_until_valid(
             r'^[1-5]$',
             "\nEnter your choice: ",
             "Invalid choice. Please try again."

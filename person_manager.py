@@ -21,7 +21,12 @@ class PersonManager:
 
     def update_person(self, person_class, person_id, **kwargs):
         with self.db_manager.get_session() as session:
-            person = session.query(person_class).filter_by(id=person_id).first()
+            person = session.query(
+                person_class
+            ).filter_by(
+                id=person_id
+            ).first()
+            
             if not person:
                 print(f"{person_class.__name__.lower()} with id {person_id} not found.")
                 return
@@ -34,7 +39,12 @@ class PersonManager:
 
     def delete_person(self, person_class, person_id):
         with self.db_manager.get_session() as session:
-            person = session.query(person_class).filter_by(id=person_id).first()
+            person = session.query(
+                person_class
+            ).filter_by(
+                id=person_id
+            ).first()
+
             if not person:
                 print(f"{person_class.__name__.lower()} with id {person_id} not found.")
                 return
@@ -55,6 +65,9 @@ class MemberManager(PersonManager):
 
     def delete_member(self, member_id):
         super().delete_person(Member, member_id)
+
+    def validate_member_number(self, member_number):
+        return re.match(r'^\d{9}$', member_number)
 
 # Provider Manager
 class ProviderManager(PersonManager):
