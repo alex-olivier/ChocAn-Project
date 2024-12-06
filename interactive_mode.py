@@ -18,9 +18,7 @@ from constants import (
 class InteractiveMode:
     def __init__(self, db_url=None):
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
-        self.member_manager = MemberManager(self.db_manager)
-        self.provider_manager = ProviderManager(self.db_manager)
-        self.service_manager = ServiceManager(self.db_manager)
+
 
     # Validate user input with retry on failure
     def prompt_until_valid(regex, prompt_message, error_message) -> str:
@@ -29,6 +27,7 @@ class InteractiveMode:
             if re.match(regex, value):
                 return value
             print(error_message)
+
 
     # Prompt ChocAn manager/operator for the details of a new member or provider
     def prompt_person_details(self) -> tuple:
@@ -59,6 +58,7 @@ class InteractiveMode:
         )
         return name, street_address, city, state, zip_code
 
+
     # Prompt ChocAn manager/operator for the details of a new service
     def prompt_service_details(self) -> tuple:
         name = self.prompt_until_valid(
@@ -72,131 +72,58 @@ class InteractiveMode:
             f"Service fee cannot exceed ${SERVICE_FEE_MAX})."
         )
         return name, float(fee)
-    
-    def menu(self):
-        print("\n--- Interactive Mode ---")
-        print(" [1] Add Member")
-        print(" [2] Update Member")
-        print(" [3] Delete Member")
-        print(" [4] Add Provider")
-        print(" [5] Update Provider")
-        print(" [6] Delete Provider")
-        print(" [7] Add Service")
-        print(" [8] Update Service")
-        print(" [9] Delete Service")
-        print("[10] View Weekly Reports")
-        print("[11] Exit")
-
-        """
-        Menu Design Example #1:
-        ---------------------------------------------------
-        Main Menu
-        ---------------------------------------------------
-        Main Menu:
-          1. Interactive Mode
-          2. Provider Terminal
-          3. Manager Terminal
-          4. Exit
-
-        Enter your choice: 1
-
-        ---------------------------------------------------
-        Main Menu > Interactive Mode
-        ---------------------------------------------------
-        Main Menu:
-          Interactive Mode:
-            1. Member Management
-            2. Provider Management
-            3. Service Management
-            4. View Weekly Reports
-            5. Exit
-        
-        Enter your choice: 2
-
-        ---------------------------------------------------
-        Main Menu > Interactive Mode > Provider Management
-        ---------------------------------------------------
-        Main Menu:
-          Interactive Mode:
-            Provider Management:
-              1. Add Provider
-              2. Update Provider
-              3. Delete Provider
-              4. View Providers
-              5. Exit
-    
-        Enter your choice: 5
-
-        Menu Design Example #2:
-        ---------------------------------------------------
-        Main Menu
-        ---------------------------------------------------
-        Main Menu:
-          1. Interactive Mode
-          2. Provider Terminal
-          3. Manager Terminal
-          4. Exit
-
-        Enter your choice: 3
-
-        ---------------------------------------------------
-        Main Menu > Manager Terminal
-        ---------------------------------------------------
-        Main Menu:
-          Manager Terminal:
-            1. Generate Weekly Reports
-            2. Generate EFT Data
-            3. Generate Provider Directory
-            4. Exit
-        
-        Enter your choice: 1
-
-        ---------------------------------------------------
-        Main Menu > Interactive Mode > Provider Management
-        ---------------------------------------------------
-        Main Menu:
-          Manager Terminal:
-            Generate Weekly Reports:
-              1. Generate Memeber Reports
-              2. Update Provider
-              3. Delete Provider
-              4. View Providers
-              5. Exit
-    
-        Enter your choice: 5
-
-        
-        """
 
 
-        """
-        # Interactive Mode using a Multi-Level Menu
-        print("\n--- Interactive Mode ---")
-        print("1. Member Management")
-        print("  1. Add Member")
-        print("  2. Update Member")
-        print("  3. Delete Member")
+    def main_menu(self):
+        print("\n---------------------------------------------------")
+        print("Main Menu > Interactive Mode")
+        print("---------------------------------------------------")
+        print("Main Menu:")
+        print("  Interactive Mode:")
+        print("    1. Member Management")
+        print("    2. Provider Management")
+        print("    3. Service Management")
+        print("    4. Exit")
+        choice = self.prompt_until_valid(
+            r'^[1-4]$',
+            "\nEnter your choice: ",
+            "Invalid choice. Please try again."
+        )
+        if choice == "1":
+            self.member_management()
+        elif choice == "2": 
+            self.provider_management()
+        elif choice == "3":
+            self.service_management()
+        elif choice == "4":
+            print("Exiting... Goodbye!")
+        else:
+            print("Error occurred. Exiting...")
 
-        print("2. Provider Management")
-        print("  1. Add Provider")
-        print("  2. Update Provider")
-        print("  3. Delete Provider")
 
-        print("3. Service Management")
-        print("  1. Add Service")
-        print("  2. Update Service")
-        print("  3. Delete Service")
-        
-        print("4. View Weekly Reports")
-        print("5. Exit")
-        """
-        
-        choice = input(">> ")
-        if choice == '1':  # Add a member
+    def member_management(self):
+        member_manager = MemberManager(self.db_manager)
+        print("\n---------------------------------------------------")
+        print("Main Menu > Interactive Mode > Member Management")
+        print("---------------------------------------------------")
+        print("Main Menu:")
+        print("  Interactive Mode:")
+        print("    Member Management:")
+        print("      1. Add Member")
+        print("      2. Update Member")
+        print("      3. Delete Member")
+        print("      4. View Members")
+        print("      5. Exit")
+        choice = self.prompt_until_valid(
+            r'^[1-5]$',
+            "\nEnter your choice: ",
+            "Invalid choice. Please try again."
+        )
+        if choice == "1":  # Add a member
             name, street_address, city, state, zip_code = self.prompt_person_details()
-            self.member_manager.add_member(name, street_address, city, state, zip_code)
+            member_manager.add_member(name, street_address, city, state, zip_code)
         
-        elif choice == '2':  # Update a member
+        elif choice == "2":  # Update a member
             member_id = self.prompt_until_valid(
                 r'^\d{9}$',
                 "Enter member ID to update: ",
@@ -204,24 +131,49 @@ class InteractiveMode:
             )
             # TODO: Implement ability for user to update specific fields
             kwargs = {}
-            self.member_manager.update_member(member_id, kwargs)
+            member_manager.update_member(member_id, kwargs)
             print("Member updated.")
         
-        elif choice == '3':  # Delete a member
+        elif choice == "3":  # Delete a member
             member_id = self.prompt_until_valid(
                 r'^\d{9}$',
                 "Enter member ID to delete: ",
                 "Member ID must be 9 digits."
             )
-            self.member_manager.delete_member(member_id)
+            member_manager.delete_member(member_id)
             print("Member deleted.")
-        
-        elif choice == '4':  # Add a provider
+        elif choice == "4":  # View Members
+            member_manager.view_members()
+            pass
+        elif choice == "5":
+            print("Exiting... Goodbye!")
+        else:
+            print("Error occurred. Exiting...")
+
+
+    def provider_management(self):
+        provider_manager = ProviderManager(self.db_manager)
+        print("\n---------------------------------------------------")
+        print("Main Menu > Interactive Mode > Provider Management")
+        print("---------------------------------------------------")
+        print("Main Menu:")
+        print("  Interactive Mode:")
+        print("    Provider Management:")
+        print("      1. Add Provider")
+        print("      2. Update Provider")
+        print("      3. Delete Provider")
+        print("      4. View Providers")
+        print("      5. Exit")
+        choice = self.prompt_until_valid(
+            r'^[1-5]$',
+            "\nEnter your choice: ",
+            "Invalid choice. Please try again."
+        )
+        if choice == "1":  # Add a provider
             name, street_address, city, state, zip_code = self.prompt_person_details()
-            self.person_manager.add_person(Provider, name, street_address, city, state, zip_code)
+            provider_manager.add_provider(name, street_address, city, state, zip_code)
             print("Provider added.")
-        
-        elif choice == '5':  # Update a provider
+        elif choice == "2":  # Update a provider
             provider_id = input("Enter provider ID to update: ")
             name = input("Enter new provider name: ")
             number = input("Enter new provider number: ")
@@ -229,27 +181,60 @@ class InteractiveMode:
             city = input("Enter new city: ")
             state = input("Enter new state: ")
             zip_code = input("Enter new zip code: ")
-            system.update_provider(provider_id, name, number, address, city, state, zip_code)
+
+            name, street_address, city, state, zip_code = self.prompt_person_details()
+            provider_manager.update_provider(provider_id, name, number, address, city, state, zip_code)
             print("Provider updated.")
-        
-        elif choice == '6':  # Delete a provider
+        elif choice == "3":  # Delete a provider
             provider_id = input("Enter provider ID to delete: ")
-            system.delete_provider(provider_id)
+            provider_manager.delete_provider(provider_id)
             print("Provider deleted.")
-        
-        elif choice == '7':  # Add a service
-            service_code = input("Enter service code: ")
-            service_name = input("Enter service name: ")
-            fee = float(input("Enter service fee: "))
-            system.add_service(service_code, service_name, fee)
+        elif choice == "4":  # View Providers
+            # provider_manager.view_providers()
+            pass  
+        elif choice == "5":
+            print("Exiting... Goodbye!")
+        else:
+            print("Error occurred. Exiting...")
+
+
+    def service_management(self):
+        service_manager = ServiceManager(self.db_manager)
+        print("\n---------------------------------------------------")
+        print("Main Menu > Interactive Mode > Service Management")
+        print("---------------------------------------------------")
+        print("Main Menu:")
+        print("  Interactive Mode:")
+        print("    Service Management:")
+        print("      1. Add Service")
+        print("      2. Update Service")
+        print("      3. Delete Service")
+        print("      4. View Services")
+        print("      5. Exit")
+        choice = self.prompt_until_valid(
+            r'^[1-5]$',
+            "\nEnter your choice: ",
+            "Invalid choice. Please try again."
+        )
+        if choice == "1":  # Add a service
+            service_name, fee = self.prompt_service_details()
+            service_manager.add_service(service_name, fee)
             print("Service added.")
+        elif choice == "2":  # Update Service
+            # service_manager.update_service()
+            pass
+        elif choice == "3":  # Delete Service
+            # service_manager.delete_service()
+            pass
+        elif choice == "4":  # View Services
+            # service_manager.view_services()
+            pass
+        elif choice == "5":
+            print("Exiting... Goodbye!")
+        else:
+            print("Error occurred. Exiting...")
         
-        elif choice == '8':  # View weekly reports
-            system.generate_weekly_reports()
-        
-        elif choice == '9':
-            print("Exiting manager menu.")
-            return
+
 
 """
 from person_manager import MemberManager, ProviderManager
