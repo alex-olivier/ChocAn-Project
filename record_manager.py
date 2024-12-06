@@ -1,8 +1,9 @@
 from models import Member, Provider, Service, ServiceRecord
+from database_manager import DatabaseManager
 from datetime import datetime
 
 class RecordManager:
-    def __init__(self, db_manager):
+    def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
 
     # TODO: Finish implementing this method and make it work outside of main.py

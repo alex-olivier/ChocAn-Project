@@ -24,27 +24,27 @@ class InteractiveMode:
         name = prompt_until_valid(
             rf'^.{{{NAME_MIN_LEN},{NAME_MAX_LEN}}}$',
             "Enter name: ",
-            "Name must be up to 25 characters."
+            f"Name must be up to {NAME_MAX_LEN} characters."
         )
         street_address = prompt_until_valid(
             rf'^.{{{STREET_MIN_LEN},{STREET_MAX_LEN}}}$',
             "Enter street address: ",
-            "Street address must be up to 25 characters."
+            f"Street address must be up to {STREET_MAX_LEN} characters."
         )
         city = prompt_until_valid(
             rf'^.{{{CITY_MIN_LEN},{CITY_MAX_LEN}}}$',
             "Enter city: ",
-            "City must be up to 14 characters."
+            f"City must be up to {CITY_MAX_LEN} characters."
         )
         state = prompt_until_valid(
             rf'^[A-Z]{{{STATE_LEN}}}$',
             "Enter state: ",
-            "State must include 2 uppercase letters."
+            f"State must include {STATE_LEN} uppercase letters."
         )
         zip_code = prompt_until_valid(
             rf'^\d{{{ZIP_CODE_LEN}}}$',
             "Enter zip code: ",
-            "Zip code must include 5 digits."
+            f"Zip code must include {ZIP_CODE_LEN} digits."
         )
         return name, street_address, city, state, zip_code
 
@@ -54,7 +54,7 @@ class InteractiveMode:
         name = prompt_until_valid(
             rf'^.{{{SERVICE_NAME_MIN_LEN},{SERVICE_NAME_MAX_LEN}}}$',
             "Enter service name: ",
-            "Service name must be up to 25 characters)."
+            f"Service name must be up to {SERVICE_NAME_MAX_LEN} characters)."
         )
         fee = prompt_until_valid(
             r'^\d{1,3}(\.\d{1,2})?$'  # 0-999.99 (2 decimal places)
@@ -64,8 +64,9 @@ class InteractiveMode:
         return name, float(fee)
 
 
-    def main_menu(self):
-        print("\n---------------------------------------------------")
+    def run(self):
+        print("\n")
+        print("---------------------------------------------------")
         print("Interactive Mode")
         print("---------------------------------------------------")
         print("Interactive Mode:")
@@ -73,17 +74,18 @@ class InteractiveMode:
         print("  2. Provider Management")
         print("  3. Service Management")
         print("  4. Exit")
+        
         choice = prompt_until_valid(
             r'^[1-4]$',
             "\nEnter your choice: ",
             "Invalid choice. Please try again."
         )
         if choice == "1":
-            self.member_management()
+            self.member_management(self.db_manager)
         elif choice == "2": 
-            self.provider_management()
+            self.provider_management(self.db_manager)
         elif choice == "3":
-            self.service_management()
+            self.service_management(self.db_manager)
         elif choice == "4":
             print("Exiting... Goodbye!")
         else:
@@ -92,7 +94,8 @@ class InteractiveMode:
 
     def member_management(self):
         member_manager = MemberManager(self.db_manager)
-        print("\n---------------------------------------------------")
+        print("\n")
+        print("---------------------------------------------------")
         print("Interactive Mode > Member Management")
         print("---------------------------------------------------")
         print("Interactive Mode:")
@@ -102,6 +105,7 @@ class InteractiveMode:
         print("    3. Delete Member")
         print("    4. View Members")
         print("    5. Exit")
+        
         choice = prompt_until_valid(
             r'^[1-5]$',
             "\nEnter your choice: ",
@@ -111,13 +115,14 @@ class InteractiveMode:
             name, street_address, city, state, zip_code = self.prompt_person_details()
             member_manager.add_member(name, street_address, city, state, zip_code)
         
-        elif choice == "2":  # Update a member
+        elif choice == "2": # Update a member
+            # TODO: Implement ability for user to update specific fields
             member_id = prompt_until_valid(
                 r'^\d{9}$',
                 "Enter member ID to update: ",
                 "Member ID must be 9 digits."
             )
-            # TODO: Implement ability for user to update specific fields
+            
             kwargs = {}
             member_manager.update_member(member_id, kwargs)
             print("Member updated.")
@@ -140,7 +145,8 @@ class InteractiveMode:
 
     def provider_management(self):
         provider_manager = ProviderManager(self.db_manager)
-        print("\n---------------------------------------------------")
+        print("\n")
+        print("---------------------------------------------------")
         print("Interactive Mode > Provider Management")
         print("---------------------------------------------------")
         print("Interactive Mode:")
@@ -150,6 +156,7 @@ class InteractiveMode:
         print("    3. Delete Provider")
         print("    4. View Providers")
         print("    5. Exit")
+        
         choice = prompt_until_valid(
             r'^[1-5]$',
             "\nEnter your choice: ",
@@ -159,13 +166,13 @@ class InteractiveMode:
             name, street_address, city, state, zip_code = self.prompt_person_details()
             provider_manager.add_provider(name, street_address, city, state, zip_code)
             print("Provider added.")
-        elif choice == "2":  # Update a provider
+        elif choice == "2": # Update a provider
+            # TODO: Implement ability to update specific fields
             provider_id = prompt_until_valid(
                 r'^\d{9}$',
                 "Enter provider ID to update: ",
                 "Provider ID must be 9 digits."
             )
-            # TODO: Implement ability for user to update specific fields
             kwargs = {}
             provider_manager.update_member(provider_id, kwargs)
             print("Provider updated.")
@@ -187,7 +194,8 @@ class InteractiveMode:
 
     def service_management(self):
         service_manager = ServiceManager(self.db_manager)
-        print("\n---------------------------------------------------")
+        print("\n")
+        print("---------------------------------------------------")
         print("Interactive Mode > Service Management")
         print("---------------------------------------------------")
         print("Interactive Mode:")

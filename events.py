@@ -30,12 +30,16 @@ def validate_person(_mapper, _connection, target):
         raise ValueError("Zip code must include 5 digits.")
 
 # Use this when a Person model is queried
-#    if len(target.number) != 9:
-#        raise ValueError(f"{target.type.capitalize()} number must be a 9-character number.")
+
 
 # @listens_for(Person, "before_update")
 
-    
+
+@listens_for(Person, "before_update")
+def validate_person_update(_mapper, _connection, target):
+    if len(target.number) != 9:
+        raise ValueError(f"{target.type.capitalize()} number must be 9 character number.")
+
 # Event listeners for after an insert is made. 
 ###############################################
 # After a person is inserted, the member/provider number will be generated from it's id.

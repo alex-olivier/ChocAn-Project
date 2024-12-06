@@ -1,70 +1,85 @@
-from input_validation import prompt_until_valid
+from database_manager import DatabaseManager
 from report_manager import ReportManager
+from service_manager import ServiceManager
+from eft_manager import EFTManager
+from input_validation import prompt_until_valid
+from constants import DATABASE_URL
+
 
 class ManagerTerminal:
-# TODO: Fix manager_terminal() to call the correct functions
-    def main_menu():
-            print("\n---------------------------------------------------")
+    def __init__(self, db_url=None):
+        self.db_manager = DatabaseManager(db_url or DATABASE_URL)
+
+    def run(self):
+            print("\n")
+            print("---------------------------------------------------")
             print("Manager Terminal")
             print("---------------------------------------------------")
             print("Manager Terminal:")
             print("  1. Report Management")
-            print("  2. Generate EFT Data")
-            print("  3. Generate Provider Directory")
-            print("  4. Exit")
+            print("  2. Generate Provider Directory")
+            print("  3. Exit")
+
             choice = prompt_until_valid(
                 r'^[1-4]$',
                 "\nEnter your choice: ",
                 "Invalid choice. Please try again."
             )
-            if choice == "1":
-                pass  # Report Management
-            elif choice == "2":
-                pass  # Generate EFT Data
+            if choice == "1":  # Report Management
+                # TODO: Report Management
+                pass
+            elif choice == "2":  # Generate Provider Directory
+                ServiceManager().view_services
+                pass
             elif choice == "3":
-                pass  # Generate Provider Directory
-            elif choice == "4":
                 print("Exiting... Goodbye!")
             else:
                 print("Error occurred. Exiting...")
 
-    # TODO: Fix report_management() to call the correct functions
-    def report_management():
-            report_manager = ReportManager()
-            print("\n---------------------------------------------------")
+    def report_management(self):
+            print("\n")
+            print("---------------------------------------------------")
             print("Manager Terminal > Report Management")
             print("---------------------------------------------------")
             print("Manager Terminal:")
             print("  Report Management:")
             print("    1. Main Accounting Procedure")
-            print("    2. Generate Summary Report")  
+            print("    2. Generate Summary Report")
             print("    3. Generate Member Report")
             print("    4. Generate Provider Report")
-            print("    5. Exit")
+            print("    5. Generate EFT Data")
+            print("    6. Exit")
+
             choice = prompt_until_valid(
                 r'^[1-4]$',
                 "\nEnter your choice: ",
                 "Invalid choice. Please try again."
             )
-            if choice == "1":
-                pass  # Main Accounting Procedure
-            elif choice == "2":
-                pass  # Generate Summary Report
-            elif choice == "3":
+            if choice == "1":  # Main Accounting Procedure
+                # TODO: Main Accounting Procedure
+                pass
+            elif choice == "2":  # Generate Summary Report
+                # TODO: Generate Summary Report
+
+                pass
+            elif choice == "3":  # Gemerate Member Report
                 member_number = prompt_until_valid(
                     r'^\d{9}$',
                     "\nEnter member number: ",
                     "Member number must be 9 digits."
                 )
-                report_manager.generate_member_report(member_number)
-            elif choice == "4":
+                ReportManager(self.db_manager).generate_member_report(member_number)
+            elif choice == "4":  # Generate Provider Report
                 provider_number = prompt_until_valid(
                     r'^\d{9}$',
                     "\nEnter provider number: ",
                     "Provider number must be 9 digits."
                 )
-                report_manager.generate_provider_report(provider_number)
-            elif choice == "5":
+                ReportManager(self.db_manager).generate_provider_report(provider_number)
+            elif choice == "5":  # Generate EFT Data
+                EFTManager(self.db_manager).generate_eft_data()
+                pass
+            elif choice == "6":
                 print("Exiting... Goodbye!")
             else:
                 print("Error occurred. Exiting...")

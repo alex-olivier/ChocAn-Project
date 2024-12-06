@@ -4,7 +4,7 @@ import re
 
 # Handles Person Management
 class PersonManager:
-    def __init__(self, db_manager : DatabaseManager):
+    def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
 
     def add_person(self, person_class, name, street_address, city, state, zip_code):
@@ -56,7 +56,7 @@ class PersonManager:
         with self.db_manager.get_session() as session:
             persons = session.query(person_class).all()
             for person in persons:
-                print(f"{person.number}: {person.name}")
+                print(f": {person.name} {person.number}")
 
 # Member Manager
 class MemberManager(PersonManager):

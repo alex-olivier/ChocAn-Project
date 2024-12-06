@@ -15,25 +15,27 @@ from input_validation import prompt_until_valid
 
 # TODO: Fix main_menu() to call the correct functions
 def main_menu():
-        print("\n---------------------------------------------------")
+        print("\n")
+        print("---------------------------------------------------")
         print("Main Menu")
         print("---------------------------------------------------")
         print("Main Menu:")
         print("  1. Interactive Mode")
-        print("  2. Provider Terminal")
-        print("  3. Manager Terminal")
+        print("  2. Manager Terminal")
+        print("  3. Provider Terminal")
         print("  4. Exit")
+
         choice = prompt_until_valid(
             r'^[1-4]$',
             "\nEnter your choice: ",
             "Invalid choice. Please try again."
         )
         if choice == "1":
-            InteractiveMode().main_menu()
+            InteractiveMode().run()
         elif choice == "2":
-            ProviderTerminal().main_menu()
+            ManagerTerminal().run()
         elif choice == "3":
-            ManagerTerminal().main_menu()
+            ProviderTerminal().run()
         elif choice == "4":
             print("Exiting... Goodbye!")
         else:

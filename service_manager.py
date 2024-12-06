@@ -3,7 +3,7 @@ from models import Service
 from input_validation import prompt_until_valid
 
 class ServiceManager:
-    def __init__(self, db_manager : DatabaseManager):
+    def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
 
     def add_service(self, name, fee):
