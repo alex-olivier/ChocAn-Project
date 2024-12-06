@@ -45,125 +45,126 @@ def main_menu():
         else:
             print("Error occurred. Exiting...")
 
+
 # TODO: Fix interactive_mode() to call the correct functions
-def interactive_mode():
-        print("\n---------------------------------------------------")
-        print("Main Menu > Interactive Mode")
-        print("---------------------------------------------------")
-        print("Main Menu:")
-        print("  Interactive Mode:")
-        print("    1. Member Management")
-        print("    2. Provider Management")
-        print("    3. Service Management")
-        print("    4. Exit")
-        choice = prompt_until_valid(
-            r'^[1-4]$',
-            "\nEnter your choice: ",
-            "Invalid choice. Please try again."
-        )
-        if choice == "1":
-            member_management()
-        elif choice == "2":
-            provider_management()
-        elif choice == "3":
-            service_management()
-        elif choice == "4":
-            print("Exiting... Goodbye!")
-        else:
-            print("Error occurred. Exiting...")
+# def interactive_mode():
+#         print("\n---------------------------------------------------")
+#         print("Main Menu > Interactive Mode")
+#         print("---------------------------------------------------")
+#         print("Main Menu:")
+#         print("  Interactive Mode:")
+#         print("    1. Member Management")
+#         print("    2. Provider Management")
+#         print("    3. Service Management")
+#         print("    4. Exit")
+#         choice = prompt_until_valid(
+#             r'^[1-4]$',
+#             "\nEnter your choice: ",
+#             "Invalid choice. Please try again."
+#         )
+#         if choice == "1":
+#             member_management()
+#         elif choice == "2":
+#             provider_management()
+#         elif choice == "3":
+#             service_management()
+#         elif choice == "4":
+#             print("Exiting... Goodbye!")
+#         else:
+#             print("Error occurred. Exiting...")
 
 # TODO: Fix member_management() to call the correct functions
-def member_management():
-        print("\n---------------------------------------------------")
-        print("Main Menu > Interactive Mode > Member Management")
-        print("---------------------------------------------------")
-        print("Main Menu:")
-        print("  Interactive Mode:")
-        print("    Member Management:")
-        print("      1. Add Member")
-        print("      2. Update Member")
-        print("      3. Delete Member")
-        print("      4. View Members")
-        print("      5. Exit")
-        choice = prompt_until_valid(
-            r'^[1-5]$',
-            "\nEnter your choice: ",
-            "Invalid choice. Please try again."
-        )
-        if choice == "1":
-            pass  # Add Member
-        elif choice == "2":
-            pass  # Update Member
-        elif choice == "3":
-            pass  # Delete Member
-        elif choice == "4":
-            pass  # View Members
-        elif choice == "5":
-            print("Exiting... Goodbye!")
-        else:
-            print("Error occurred. Exiting...")
+# def member_management():
+#         print("\n---------------------------------------------------")
+#         print("Main Menu > Interactive Mode > Member Management")
+#         print("---------------------------------------------------")
+#         print("Main Menu:")
+#         print("  Interactive Mode:")
+#         print("    Member Management:")
+#         print("      1. Add Member")
+#         print("      2. Update Member")
+#         print("      3. Delete Member")
+#         print("      4. View Members")
+#         print("      5. Exit")
+#         choice = prompt_until_valid(
+#             r'^[1-5]$',
+#             "\nEnter your choice: ",
+#             "Invalid choice. Please try again."
+#         )
+#         if choice == "1":
+#             pass  # Add Member
+#         elif choice == "2":
+#             pass  # Update Member
+#         elif choice == "3":
+#             pass  # Delete Member
+#         elif choice == "4":
+#             pass  # View Members
+#         elif choice == "5":
+#             print("Exiting... Goodbye!")
+#         else:
+#             print("Error occurred. Exiting...")
 
 # TODO: Fix provider_management() to call the correct functions
-def provider_management():
-        print("\n---------------------------------------------------")
-        print("Main Menu > Interactive Mode > Provider Management")
-        print("---------------------------------------------------")
-        print("Main Menu:")
-        print("  Interactive Mode:")
-        print("    Provider Management:")
-        print("      1. Add Provider")
-        print("      2. Update Provider")
-        print("      3. Delete Provider")
-        print("      4. View Providers")
-        print("      5. Exit")
-        choice = prompt_until_valid(
-            r'^[1-5]$',
-            "\nEnter your choice: ",
-            "Invalid choice. Please try again."
-        )
-        if choice == "1":
-            pass  # Add Provider
-        elif choice == "2":
-            pass  # Update Provider
-        elif choice == "3":
-            pass  # Delete Provider
-        elif choice == "4":
-            pass  # View Providers
-        elif choice == "5":
-            print("Exiting... Goodbye!")
-        else:
-            print("Error occurred. Exiting...")
+# def provider_management():
+#         print("\n---------------------------------------------------")
+#         print("Main Menu > Interactive Mode > Provider Management")
+#         print("---------------------------------------------------")
+#         print("Main Menu:")
+#         print("  Interactive Mode:")
+#         print("    Provider Management:")
+#         print("      1. Add Provider")
+#         print("      2. Update Provider")
+#         print("      3. Delete Provider")
+#         print("      4. View Providers")
+#         print("      5. Exit")
+#         choice = prompt_until_valid(
+#             r'^[1-5]$',
+#             "\nEnter your choice: ",
+#             "Invalid choice. Please try again."
+#         )
+#         if choice == "1":
+#             pass  # Add Provider
+#         elif choice == "2":
+#             pass  # Update Provider
+#         elif choice == "3":
+#             pass  # Delete Provider
+#         elif choice == "4":
+#             pass  # View Providers
+#         elif choice == "5":
+#             print("Exiting... Goodbye!")
+#         else:
+#             print("Error occurred. Exiting...")
 
 # TODO: Fix service_management() to call the correct functions
-def service_management():
-        print("\n---------------------------------------------------")
-        print("Main Menu > Interactive Mode > Service Management")
-        print("---------------------------------------------------")
-        print("Main Menu:")
-        print("  Interactive Mode:")
-        print("    Service Management:")
-        print("      1. Add Service")
-        print("      2. Update Service")
-        print("      3. Delete Service")
-        print("      4. View Services")
-        print("      5. Exit")
-        choice = prompt_until_valid(
-            r'^[1-5]$',
-            "\nEnter your choice: ",
-            "Invalid choice. Please try again."
-        )
-        if choice == "1":
-            pass  # Add Service
-        elif choice == "2":
-            pass  # Update Service
-        elif choice == "3":
-            pass  # Delete Service
-        elif choice == "4":
-            pass  # View Services
-        elif choice == "5":
-            print("Exiting... Goodbye!")
-        else:
-            print("Error occurred. Exiting...")
+# def service_management():
+#         print("\n---------------------------------------------------")
+#         print("Main Menu > Interactive Mode > Service Management")
+#         print("---------------------------------------------------")
+#         print("Main Menu:")
+#         print("  Interactive Mode:")
+#         print("    Service Management:")
+#         print("      1. Add Service")
+#         print("      2. Update Service")
+#         print("      3. Delete Service")
+#         print("      4. View Services")
+#         print("      5. Exit")
+#         choice = prompt_until_valid(
+#             r'^[1-5]$',
+#             "\nEnter your choice: ",
+#             "Invalid choice. Please try again."
+#         )
+#         if choice == "1":
+#             pass  # Add Service
+#         elif choice == "2":
+#             pass  # Update Service
+#         elif choice == "3":
+#             pass  # Delete Service
+#         elif choice == "4":
+#             pass  # View Services
+#         elif choice == "5":
+#             print("Exiting... Goodbye!")
+#         else:
+#             print("Error occurred. Exiting...")
 
 # TODO: Fix provider_terminal() to call the correct functions
 def provider_terminal():
