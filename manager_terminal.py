@@ -11,8 +11,7 @@ class ManagerTerminal:
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
 
     def run(self):
-            print("\n")
-            print("---------------------------------------------------")
+            print("\n---------------------------------------------------")
             print("Manager Terminal")
             print("---------------------------------------------------")
             print("Manager Terminal:")
@@ -37,8 +36,7 @@ class ManagerTerminal:
                 print("Error occurred. Exiting...")
 
     def report_management(self):
-            print("\n")
-            print("---------------------------------------------------")
+            print("\n---------------------------------------------------")
             print("Manager Terminal > Report Management")
             print("---------------------------------------------------")
             print("Manager Terminal:")

@@ -8,8 +8,7 @@ class ProviderTerminal:
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
 
     def run(self):
-            print("\n")
-            print("---------------------------------------------------")
+            print("\n---------------------------------------------------")
             print("Provider Terminal")
             print("---------------------------------------------------")
             print("Provider Terminal:")

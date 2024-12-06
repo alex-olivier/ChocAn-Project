@@ -66,7 +66,7 @@ class Person(Base):
 class Member(Person):
     __tablename__ = 'members'
 
-    is_active = Column(Boolean, nullable=False)
+    is_active = Column(Boolean, nullable=True)
 
     __table_args__ = (
         CheckConstraint("is_active IN (0, 1)", name="check_is_active_boolean"),

@@ -63,8 +63,7 @@ class InteractiveMode:
 
 
     def run(self):
-        print("\n")
-        print("---------------------------------------------------")
+        print("\n---------------------------------------------------")
         print("Interactive Mode")
         print("---------------------------------------------------")
         print("Interactive Mode:")
@@ -79,11 +78,11 @@ class InteractiveMode:
             "Invalid choice. Please try again."
         )
         if choice == "1":
-            self.member_management(self.db_manager)
+            self.member_management()
         elif choice == "2": 
-            self.provider_management(self.db_manager)
+            self.provider_management()
         elif choice == "3":
-            self.service_management(self.db_manager)
+            self.service_management()
         elif choice == "4":
             print("Exiting... Goodbye!")
         else:
@@ -92,8 +91,7 @@ class InteractiveMode:
 
     def member_management(self):
         member_manager = MemberManager(self.db_manager)
-        print("\n")
-        print("---------------------------------------------------")
+        print("\n---------------------------------------------------")
         print("Interactive Mode > Member Management")
         print("---------------------------------------------------")
         print("Interactive Mode:")
@@ -143,8 +141,7 @@ class InteractiveMode:
 
     def provider_management(self):
         provider_manager = ProviderManager(self.db_manager)
-        print("\n")
-        print("---------------------------------------------------")
+        print("\n---------------------------------------------------")
         print("Interactive Mode > Provider Management")
         print("---------------------------------------------------")
         print("Interactive Mode:")
@@ -192,8 +189,7 @@ class InteractiveMode:
 
     def service_management(self):
         service_manager = ServiceManager(self.db_manager)
-        print("\n")
-        print("---------------------------------------------------")
+        print("\n---------------------------------------------------")
         print("Interactive Mode > Service Management")
         print("---------------------------------------------------")
         print("Interactive Mode:")

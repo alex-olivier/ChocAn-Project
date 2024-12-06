@@ -6,10 +6,9 @@ from input_validation import prompt_until_valid
 
 # TODO: Fix main_menu() to call the correct functions
 def main_menu():
-        print("\n")
-        print("---------------------------------------------------")
-        print("Main Menu")
-        print("---------------------------------------------------")
+        # print("---------------------------------------------------")
+        # print("Main Menu")
+        # print("---------------------------------------------------")
         print("Main Menu:")
         print("  1. Interactive Mode")
         print("  2. Manager Terminal")
