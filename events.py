@@ -11,7 +11,7 @@ from sqlalchemy.event import listens_for
 ################################################
 @listens_for(Member, "before_insert")
 def set_member_is_active(_mapper, _connection, target):
-    target.is_active = 1
+    target.is_active = True
 
 # Event Listeners to perform validation in Python so errors can be 
 # caught and handled before the changes are commit to the DB.
@@ -43,7 +43,8 @@ def validate_person_update(_mapper, _connection, target):
 # Event listeners for after an insert is made. 
 ###############################################
 # After a person is inserted, the member/provider number will be generated from it's id.
-@listens_for(Person, "after_insert")
+@listens_for(Member, "after_insert")
+@listens_for(Provider, "after_insert")
 def set_person_number(_mapper, connection, target):
     if target.id is not None:
         target.number = f"{target.id:09d}"

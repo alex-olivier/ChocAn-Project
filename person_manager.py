@@ -55,7 +55,7 @@ class PersonManager:
         with self.db_manager.get_session() as session:
             persons = session.query(person_class).all()
             for person in persons:
-                print(f": {person.name} {person.number}")
+                print(f"{person.name}, {person.number}")
 
 # Member Manager
 class MemberManager(PersonManager):
