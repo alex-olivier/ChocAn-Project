@@ -1,5 +1,5 @@
 from models import Member, Provider, Service, ServiceRecord
-from database_manager import DatabaseManager, get_session
+from database_manager import DatabaseManager
 
 from datetime import datetime
 

@@ -1,4 +1,4 @@
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from models import Base
 from contextlib import contextmanager

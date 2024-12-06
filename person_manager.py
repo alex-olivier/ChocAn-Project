@@ -1,6 +1,5 @@
 from database_manager import DatabaseManager
 from models import Member, Provider
-import re
 
 # Handles Person Management
 class PersonManager:

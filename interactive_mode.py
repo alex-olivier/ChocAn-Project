@@ -1,16 +1,14 @@
 from database_manager import DatabaseManager
 from person_manager import MemberManager, ProviderManager
 from service_manager import ServiceManager
-from record_manager import RecordManager
-from models import Member, Provider, Service, ServiceRecord
 from input_validation import prompt_until_valid
 from constants import (
     DATABASE_URL,
-    NAME_MIN_LEN, NAME_MAX_LEN, 
-    STREET_MIN_LEN, STREET_MAX_LEN, 
-    CITY_MIN_LEN, CITY_MAX_LEN, 
-    STATE_LEN, 
-    ZIP_CODE_LEN,
+    PERSON_NAME_MIN_LEN, PERSON_NAME_MAX_LEN, 
+    PERSON_STREET_ADDRESS_MIN_LEN, PERSON_STREET_ADDRESS_MAX_LEN, 
+    PERSON_CITY_MIN_LEN, PERSON_CITY_MAX_LEN, 
+    PERSON_STATE_LEN, 
+    PERSON_ZIP_CODE_LEN,
     SERVICE_NAME_MIN_LEN, SERVICE_NAME_MAX_LEN,
     SERVICE_FEE_MAX
 )
@@ -22,29 +20,29 @@ class InteractiveMode:
     # Prompt ChocAn manager/operator for the details of a new member or provider
     def prompt_person_details(self) -> tuple:
         name = prompt_until_valid(
-            rf'^.{{{NAME_MIN_LEN},{NAME_MAX_LEN}}}$',
+            rf'^.{{{PERSON_NAME_MIN_LEN},{PERSON_NAME_MAX_LEN}}}$',
             "Enter name: ",
-            f"Name must be up to {NAME_MAX_LEN} characters."
+            f"Name must be up to {PERSON_NAME_MAX_LEN} characters."
         )
         street_address = prompt_until_valid(
-            rf'^.{{{STREET_MIN_LEN},{STREET_MAX_LEN}}}$',
+            rf'^.{{{PERSON_STREET_ADDRESS_MIN_LEN},{PERSON_STREET_ADDRESS_MAX_LEN}}}$',
             "Enter street address: ",
-            f"Street address must be up to {STREET_MAX_LEN} characters."
+            f"Street address must be up to {PERSON_STREET_ADDRESS_MAX_LEN} characters."
         )
         city = prompt_until_valid(
-            rf'^.{{{CITY_MIN_LEN},{CITY_MAX_LEN}}}$',
+            rf'^.{{{PERSON_CITY_MIN_LEN},{PERSON_CITY_MAX_LEN}}}$',
             "Enter city: ",
-            f"City must be up to {CITY_MAX_LEN} characters."
+            f"City must be up to {PERSON_CITY_MAX_LEN} characters."
         )
         state = prompt_until_valid(
-            rf'^[A-Z]{{{STATE_LEN}}}$',
+            rf'^[A-Z]{{{PERSON_STATE_LEN}}}$',
             "Enter state: ",
-            f"State must include {STATE_LEN} uppercase letters."
+            f"State must include {PERSON_STATE_LEN} uppercase letters."
         )
         zip_code = prompt_until_valid(
-            rf'^\d{{{ZIP_CODE_LEN}}}$',
+            rf'^\d{{{PERSON_ZIP_CODE_LEN}}}$',
             "Enter zip code: ",
-            f"Zip code must include {ZIP_CODE_LEN} digits."
+            f"Zip code must include {PERSON_ZIP_CODE_LEN} digits."
         )
         return name, street_address, city, state, zip_code
 

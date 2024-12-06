@@ -1,15 +1,6 @@
-# import os
-# from sqlalchemy import create_engine 
-# from sqlalchemy.orm import sessionmaker, Session
-# from sqlalchemy.sql import func
-from models import (
-    models, Base, Member, Provider, Service, ProviderService, ServiceRecord
-)
 from interactive_mode import InteractiveMode
 from manager_terminal import ManagerTerminal
 from provider_terminal import ProviderTerminal
-# from database_manager import DatabaseManager, get_session
-
 from input_validation import prompt_until_valid
 
 
