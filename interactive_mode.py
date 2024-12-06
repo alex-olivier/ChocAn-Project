@@ -119,8 +119,8 @@ class InteractiveMode:
             # TODO: Implement ability for user to update specific fields
             member_id = prompt_until_valid(
                 r'^\d{9}$',
-                "Enter member ID to update: ",
-                "Member ID must be 9 digits."
+                "Enter member number to update: ",
+                "Member number must be 9 digits."
             )
             
             kwargs = {}
@@ -130,8 +130,8 @@ class InteractiveMode:
         elif choice == "3":  # Delete a member
             member_id = prompt_until_valid(
                 r'^\d{9}$',
-                "Enter member ID to delete: ",
-                "Member ID must be 9 digits."
+                "Enter member number to delete: ",
+                "Member number must be 9 digits."
             )
             member_manager.delete_member(member_id)
             print("Member deleted.")
@@ -170,8 +170,8 @@ class InteractiveMode:
             # TODO: Implement ability to update specific fields
             provider_id = prompt_until_valid(
                 r'^\d{9}$',
-                "Enter provider ID to update: ",
-                "Provider ID must be 9 digits."
+                "Enter provider number to update: ",
+                "Provider number must be 9 digits."
             )
             kwargs = {}
             provider_manager.update_member(provider_id, kwargs)
@@ -179,8 +179,8 @@ class InteractiveMode:
         elif choice == "3":  # Delete a provider
             provider_id = prompt_until_valid(
                 r'^\d{9}$',
-                "Enter provider ID to delete: ",
-                "Provider ID must be 9 digits."
+                "Enter provider number to delete: ",
+                "Provider number must be 9 digits."
             )
             provider_manager.delete_provider(provider_id)
             print("Provider deleted.")
@@ -215,10 +215,20 @@ class InteractiveMode:
             service_manager.add_service(service_name, fee)
             print("Service added.")
         elif choice == "2":  # Update Service
-            # service_manager.update_service()
+            choice = prompt_until_valid(
+                r'^\d{6}$',
+                "\nEnter service code to update: ",
+                "Service code must be 6 digits."
+            )
+            service_manager.update_service(service_code)
             pass
         elif choice == "3":  # Delete Service
-            # service_manager.delete_service()
+            service_code = prompt_until_valid(
+                r'^\d{6}$',
+                "\nEnter service code to delete: ",
+                "Service code must be 6 digits."
+            )
+            service_manager.delete_service(service_code)
             pass
         elif choice == "4":  # View Services
             service_manager.view_services()
