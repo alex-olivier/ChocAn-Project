@@ -2,7 +2,7 @@ from database_manager import DatabaseManager
 from person_manager import MemberManager, ProviderManager
 from record_manager import RecordManager
 from service_manager import ServiceManager
-from input_validation import prompt_until_valid
+from utils import prompt_until_valid
 from constants import DATABASE_URL
 
 

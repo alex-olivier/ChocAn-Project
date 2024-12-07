@@ -1,7 +1,7 @@
 from interactive_mode import InteractiveMode
 from manager_terminal import ManagerTerminal
 from provider_terminal import ProviderTerminal
-from input_validation import prompt_until_valid
+from utils import prompt_until_valid
 
 
 # TODO: Fix main_menu() to call the correct functions

@@ -1,7 +1,7 @@
 from database_manager import DatabaseManager
 from report_manager import ReportManager
 from service_manager import ServiceManager
-from input_validation import prompt_until_valid
+from utils import prompt_until_valid
 from constants import DATABASE_URL
 
 

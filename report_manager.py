@@ -1,3 +1,4 @@
+import os
 from database_manager import DatabaseManager
 from models import Member, Provider, Service, ServiceRecord
 from datetime import datetime, timedelta
