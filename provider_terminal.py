@@ -9,7 +9,7 @@ class ProviderTerminal:
     def __init__(self, db_url=None):
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
 
-    def menu(self, provider_number):
+    def main_menu(self, provider_number):
             print("\n---------------------------------------------------")
             print("Provider Terminal")
             print("---------------------------------------------------")
@@ -24,19 +24,20 @@ class ProviderTerminal:
                 "\nEnter your choice: ",
                 "Invalid choice. Please try again."
             )
-            if choice == "1":  # TODO: Validate Member
+            if choice == "1":
                 member_number = prompt_until_valid(
                     r'^\d{9}$',
                     "Enter member number to delete: ",
                     "Member number must be 9 digits."
                 )
                 MemberManager(self.db_manager).is_valid_member(member_number)
-            elif choice == "2":  # TODO: Record Service
+            elif choice == "2":
                 member_number = prompt_until_valid(
                     r'^\d{9}$',
                     "Enter member number: ",
                     "Member number must be 9 digits."
                 )
+                MemberManager(self.db_manager).is_valid_member(member_number)
                 service_code = prompt_until_valid(
                     r'^\d{6}$',
                     "Enter service code: ",
@@ -77,6 +78,6 @@ class ProviderTerminal:
     def run(self):
         provider_number = self.validate_provider()
         if provider_number:
-            self.menu(provider_number)
+            self.main_menu(provider_number)
         else:
             print("Exiting... Goodbye!")

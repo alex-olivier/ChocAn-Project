@@ -85,12 +85,12 @@ class MemberManager(PersonManager):
             member_id = int(member_number)
             with self.db_manager.get_session() as session:
                 member = session.query(Member).filter_by(id=member_id).first()
-                if (member.is_valid is False):
-                    print ("Member Suspended")
-                    return False
-                else:
+                if member.is_valid:
                     print ("Validated")
                     return True
+                else:
+                    print ("Member Suspended")
+                    return False        
         else:
             print("Invalid Number")
             return False

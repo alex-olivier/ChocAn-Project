@@ -9,7 +9,7 @@ class ManagerTerminal:
     def __init__(self, db_url=None):
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
 
-    def run(self):
+    def main_menu(self):
             print("\n---------------------------------------------------")
             print("Manager Terminal")
             print("---------------------------------------------------")
@@ -80,3 +80,7 @@ class ManagerTerminal:
                 print("Exiting... Goodbye!")
             else:
                 print("Error occurred. Exiting...")
+
+    def run(self):
+        while True:
+            self.main_menu()
