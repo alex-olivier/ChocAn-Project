@@ -4,14 +4,15 @@ from service_manager import ServiceManager
 from input_validation import prompt_until_valid
 from constants import (
     DATABASE_URL,
-    PERSON_NAME_MIN_LEN, PERSON_NAME_MAX_LEN, 
-    PERSON_STREET_ADDRESS_MIN_LEN, PERSON_STREET_ADDRESS_MAX_LEN, 
-    PERSON_CITY_MIN_LEN, PERSON_CITY_MAX_LEN, 
-    PERSON_STATE_LEN, 
-    PERSON_ZIP_CODE_LEN,
+    NAME_MIN_LEN, NAME_MAX_LEN, 
+    STREET_ADDRESS_MIN_LEN, STREET_ADDRESS_MAX_LEN, 
+    CITY_MIN_LEN, CITY_MAX_LEN, 
+    STATE_LEN, 
+    ZIP_CODE_LEN,
     SERVICE_NAME_MIN_LEN, SERVICE_NAME_MAX_LEN,
     SERVICE_FEE_MAX
 )
+
 
 class InteractiveMode:
     def __init__(self, db_url=None):
@@ -20,32 +21,31 @@ class InteractiveMode:
     # Prompt ChocAn manager/operator for the details of a new member or provider
     def prompt_person_details(self) -> tuple:
         name = prompt_until_valid(
-            rf'^.{{{PERSON_NAME_MIN_LEN},{PERSON_NAME_MAX_LEN}}}$',
+            rf'^.{{{NAME_MIN_LEN},{NAME_MAX_LEN}}}$',
             "Enter name: ",
-            f"Name must be up to {PERSON_NAME_MAX_LEN} characters."
+            f"Name must be up to {NAME_MAX_LEN} characters."
         )
         street_address = prompt_until_valid(
-            rf'^.{{{PERSON_STREET_ADDRESS_MIN_LEN},{PERSON_STREET_ADDRESS_MAX_LEN}}}$',
+            rf'^.{{{STREET_ADDRESS_MIN_LEN},{STREET_ADDRESS_MAX_LEN}}}$',
             "Enter street address: ",
-            f"Street address must be up to {PERSON_STREET_ADDRESS_MAX_LEN} characters."
+            f"Street address must be up to {STREET_ADDRESS_MAX_LEN} characters."
         )
         city = prompt_until_valid(
-            rf'^.{{{PERSON_CITY_MIN_LEN},{PERSON_CITY_MAX_LEN}}}$',
+            rf'^.{{{CITY_MIN_LEN},{CITY_MAX_LEN}}}$',
             "Enter city: ",
-            f"City must be up to {PERSON_CITY_MAX_LEN} characters."
+            f"City must be up to {CITY_MAX_LEN} characters."
         )
         state = prompt_until_valid(
-            rf'^[A-Z]{{{PERSON_STATE_LEN}}}$',
+            rf'^[A-Z]{{{STATE_LEN}}}$',
             "Enter state: ",
-            f"State must include {PERSON_STATE_LEN} uppercase letters."
+            f"State must include {STATE_LEN} uppercase letters."
         )
         zip_code = prompt_until_valid(
-            rf'^\d{{{PERSON_ZIP_CODE_LEN}}}$',
+            rf'^\d{{{ZIP_CODE_LEN}}}$',
             "Enter zip code: ",
-            f"Zip code must include {PERSON_ZIP_CODE_LEN} digits."
+            f"Zip code must include {ZIP_CODE_LEN} digits."
         )
         return name, street_address, city, state, zip_code
-
 
     # Prompt ChocAn manager/operator for the details of a new service
     def prompt_service_details(self) -> tuple:
@@ -60,7 +60,6 @@ class InteractiveMode:
             f"Service fee cannot exceed ${SERVICE_FEE_MAX})."
         )
         return name, float(fee)
-
 
     def run(self):
         print("\n---------------------------------------------------")
@@ -88,7 +87,6 @@ class InteractiveMode:
         else:
             print("Error occurred. Exiting...")
 
-
     def member_management(self):
         member_manager = MemberManager(self.db_manager)
         print("\n---------------------------------------------------")
@@ -110,34 +108,29 @@ class InteractiveMode:
         if choice == "1":  # Add a member
             name, street_address, city, state, zip_code = self.prompt_person_details()
             member_manager.add_member(name, street_address, city, state, zip_code)
-        
         elif choice == "2": # Update a member
             # TODO: Implement ability for user to update specific fields
-            member_id = prompt_until_valid(
+            member_number = prompt_until_valid(
                 r'^\d{9}$',
                 "Enter member number to update: ",
                 "Member number must be 9 digits."
             )
             
             kwargs = {}
-            member_manager.update_member(member_id, kwargs)
-            print("Member updated.")
-        
+            member_manager.update_member(member_number, kwargs)
         elif choice == "3":  # Delete a member
-            member_id = prompt_until_valid(
+            member_number = prompt_until_valid(
                 r'^\d{9}$',
                 "Enter member number to delete: ",
                 "Member number must be 9 digits."
             )
-            member_manager.delete_member(member_id)
-            print("Member deleted.")
+            member_manager.delete_member(member_number)
         elif choice == "4":  # View Members
             member_manager.view_members()
         elif choice == "5":
             print("Exiting... Goodbye!")
         else:
             print("Error occurred. Exiting...")
-
 
     def provider_management(self):
         provider_manager = ProviderManager(self.db_manager)
@@ -160,32 +153,28 @@ class InteractiveMode:
         if choice == "1":  # Add a provider
             name, street_address, city, state, zip_code = self.prompt_person_details()
             provider_manager.add_provider(name, street_address, city, state, zip_code)
-            print("Provider added.")
         elif choice == "2": # Update a provider
             # TODO: Implement ability to update specific fields
-            provider_id = prompt_until_valid(
+            provider_number = prompt_until_valid(
                 r'^\d{9}$',
                 "Enter provider number to update: ",
                 "Provider number must be 9 digits."
             )
             kwargs = {}
-            provider_manager.update_member(provider_id, kwargs)
-            print("Provider updated.")
+            provider_manager.update_member(provider_number, kwargs)
         elif choice == "3":  # Delete a provider
-            provider_id = prompt_until_valid(
+            provider_number = prompt_until_valid(
                 r'^\d{9}$',
                 "Enter provider number to delete: ",
                 "Provider number must be 9 digits."
             )
-            provider_manager.delete_provider(provider_id)
-            print("Provider deleted.")
+            provider_manager.delete_provider(provider_number)
         elif choice == "4":  # View Providers
             provider_manager.view_providers()
         elif choice == "5":
             print("Exiting... Goodbye!")
         else:
             print("Error occurred. Exiting...")
-
 
     def service_management(self):
         service_manager = ServiceManager(self.db_manager)
@@ -199,6 +188,7 @@ class InteractiveMode:
         print("    3. Delete Service")
         print("    4. View Services")
         print("    5. Exit")
+
         choice = prompt_until_valid(
             r'^[1-5]$',
             "\nEnter your choice: ",
@@ -207,15 +197,14 @@ class InteractiveMode:
         if choice == "1":  # Add a service
             service_name, fee = self.prompt_service_details()
             service_manager.add_service(service_name, fee)
-            print("Service added.")
         elif choice == "2":  # Update Service
+            # TODO: Implement ability to update specific fields
             choice = prompt_until_valid(
                 r'^\d{6}$',
                 "\nEnter service code to update: ",
                 "Service code must be 6 digits."
             )
             service_manager.update_service(service_code)
-            pass
         elif choice == "3":  # Delete Service
             service_code = prompt_until_valid(
                 r'^\d{6}$',
@@ -223,19 +212,9 @@ class InteractiveMode:
                 "Service code must be 6 digits."
             )
             service_manager.delete_service(service_code)
-            pass
         elif choice == "4":  # View Services
             service_manager.view_services()
-            pass
         elif choice == "5":
             print("Exiting... Goodbye!")
         else:
             print("Error occurred. Exiting...")
-        
-
-
-"""
-from person_manager import MemberManager, ProviderManager
-from service_manager import ServiceManager
-from record_manager import RecordManager
-"""

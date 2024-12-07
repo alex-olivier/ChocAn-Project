@@ -6,9 +6,6 @@ from input_validation import prompt_until_valid
 
 # TODO: Fix main_menu() to call the correct functions
 def main_menu():
-        # print("---------------------------------------------------")
-        # print("Main Menu")
-        # print("---------------------------------------------------")
         print("Main Menu:")
         print("  1. Interactive Mode")
         print("  2. Manager Terminal")
@@ -30,7 +27,6 @@ def main_menu():
             print("Exiting... Goodbye!")
         else:
             print("Error occurred. Exiting...")
-
 
 # TODO: Fix main() to call the correct functions
 if __name__ == "__main__":

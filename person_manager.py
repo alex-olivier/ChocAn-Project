@@ -1,7 +1,8 @@
 from database_manager import DatabaseManager
 from models import Member, Provider
 
-# Handles Person Management
+
+# The base class for managing ChocAn persons (members and providers)
 class PersonManager:
     def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
@@ -18,46 +19,51 @@ class PersonManager:
             session.add(new_person)
             print(f"Added {person_class.__name__.lower()}: {name}")
 
-    def update_person(self, person_class, person_id, **kwargs):
+    def update_person(self, person_class, person_number, **kwargs):
+        person_id = int(person_number)  # converting to int strips leading zeroes
         with self.db_manager.get_session() as session:
-            person = session.query(
-                person_class
-            ).filter_by(
+            person = session.query(person_class).filter_by(
                 id=person_id
             ).first()
-            
             if not person:
-                print(f"{person_class.__name__.lower()} with id {person_id} not found.")
+                print(f"{person_class.__name__.lower()} with id {person_id:09} not found.")
                 return
 
             for key, value in kwargs.items():
                 if key not in ['id', 'number']:
                     setattr(person, key, value)
                     
-            print(f"Updated {person_class.__name__.lower()} with id {person_id}")
+            print(f"Updated {person_class.__name__.lower()} with id {person_id:09}")
 
-    def delete_person(self, person_class, person_id):
+    def delete_person(self, person_class, person_number):
+        person_id = int(person_number)  # converting to int strips leading zeroes
         with self.db_manager.get_session() as session:
-            person = session.query(
-                person_class
-            ).filter_by(
+            person = session.query(person_class).filter_by(
                 id=person_id
             ).first()
-
             if not person:
-                print(f"{person_class.__name__.lower()} with id {person_id} not found.")
+                print(f"{person_class.__name__.lower()} with id {person_id:09} not found.")
                 return
 
             session.delete(person)
-            print(f"Deleted {person_class.__name__.lower()} with id {person_id}")
+            print(f"Deleted {person_class.__name__.lower()} with id {person_id:09}")
         
     def view_persons(self, person_class):
         with self.db_manager.get_session() as session:
             persons = session.query(person_class).all()
             for person in persons:
-                print(f"{person.name}, {person.number}")
+                print(f"{person.name}, {person.id:09}")
 
-# Member Manager
+    def is_valid(self, person_class, person_number) -> bool:
+        person_id = int(person_number)  # converting to int strips leading zeroes
+        with self.db_manager.get_session() as session:
+            person = session.query(person_class).filter_by(
+                id=person_id
+            ).first()
+            return person is not None
+
+
+# Handles the management of ChocAn members
 class MemberManager(PersonManager):
     def __init__(self, db_manager):
         super().__init__(db_manager)
@@ -65,16 +71,32 @@ class MemberManager(PersonManager):
     def add_member(self, name, street_address, city, state, zip_code):
         super().add_person(Member, name, street_address, city, state, zip_code)
 
-    def update_member(self, member_id, **kwargs):
-        super().update_person(Member, member_id, **kwargs)
+    def update_member(self, member_number, **kwargs):
+        super().update_person(Member, member_number, **kwargs)
 
-    def delete_member(self, member_id):
-        super().delete_person(Member, member_id)
+    def delete_member(self, member_number):
+        super().delete_person(Member, member_number)
 
     def view_members(self):
         super().view_persons(Member)
 
-# Provider Manager
+    def is_valid_member(self, member_number) -> bool:
+        if (super().is_valid(Member, member_number) is True):
+            member_id = int(member_number)
+            with self.db_manager.get_session() as session:
+                member = session.query(Member).filter_by(id=member_id).first()
+                if (member.is_valid is False):
+                    print ("Member Suspended")
+                    return False
+                else:
+                    print ("Validated")
+                    return True
+        else:
+            print("Invalid Number")
+            return False
+
+
+# Handles the management of ChocAn providers
 class ProviderManager(PersonManager):
     def __init__(self, db_manager):
         super().__init__(db_manager)
@@ -82,30 +104,14 @@ class ProviderManager(PersonManager):
     def add_provider(self, name, street_address, city, state, zip_code):
         super().add_person(Provider, name, street_address, city, state, zip_code)
 
-    def update_provider(self, provider_id, **kwargs):
-        super().update_person(Provider, provider_id, **kwargs)
+    def update_provider(self, provider_number, **kwargs):
+        super().update_person(Provider, provider_number, **kwargs)
 
-    def delete_provider(self, provider_id):
-        super().delete_person(Provider, provider_id)
+    def delete_provider(self, provider_number):
+        super().delete_person(Provider, provider_number)
 
     def view_providers(self):
         super().view_persons(Provider)
-
-# # From main.py - Delete when done
-# def add_member(name, street_address, city, state, zip_code):
-#     try:
-#         new_member = Member(name=name, street_address=street_address, city=city, state=state, zip_code=zip_code)
-#         session.add(new_member)  # Triggers validation
-#         session.commit()
-#         print(f"Added member: {name}")
-#     except ValueError as e:
-#         print(e)
-
-# def add_provider(name, street_address, city, state, zip_code):
-#     try:
-#         new_provider = Provider(name=name, street_address=street_address, city=city, state=state, zip_code=zip_code)
-#         session.add(new_provider)
-#         session.commit()
-#         print(f"Added provider: {name}")
-#     except ValueError as e:
-#         print(e)
+    
+    def is_valid_provider(self, provider_number) -> bool:
+        return super().is_valid(Provider, provider_number)

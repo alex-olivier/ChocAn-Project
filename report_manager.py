@@ -7,54 +7,21 @@ class ReportManager:
     def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
 
-    # Generates Provider Directory
-    def generate_provider_directory(self):
-        """
-        An alphabetically ordered list of service names
-        and corresponding service codes and fees.
-        """
-        with get_session() as session:
-            services = session.query(Service).all()
-            directory_filename = f"ProviderDirectory_{datetime.now().strftime('%Y%m%d')}.txt"
-            with open(directory_filename, 'w') as file:
-                file.write("Provider Directory:\n")
-                file.write("Service Code, Service Name, Fee\n")
-                for service in services:
-                    file.write(f"{service.code}, {service.name}, ${service.fee:.2f}\n")
-            print(f"Provider directory generated: {directory_filename}")
-
     # Generates weekly member report
     def generate_member_report(self, member_number):
-        """
-        Each member who has consulted a ChocAn provider during
-        that week receives a list of services provided to that
-        member, sorted in order of service date. The report
-        includes:
-            • Member name                               -> member.name
-            • Member number                             -> member.number
-            • Member street address                     -> member.street_address
-            • Member city                               -> member.city
-            • Member state                              -> member.state
-            • Member zip code                           -> member.zip_code
-
-            • List of services provided during that week, sorted in
-            order of service date. For each service provided, the
-            following details are required:
-                o Date of service (MM-DD-YYYY)          -> record.service_date
-                o Provider name                         -> provider.name
-                o Service name                          -> service.name
-        """
+        member_id = int(member_number)
+        one_week_ago = datetime.now() - timedelta(weeks=1)
+        
         with self.db_manager.get_session() as session:
-            member = session.query(Member).filter_by(number=member_number).first()
+            member = session.query(Member).filter_by(id=member_id).first()
             if not member:
                 print("Invalid member number.")
                 return
             
-            one_week_ago = datetime.now() - timedelta(weeks=1)
             records = session.query(ServiceRecord).filter(
                 ServiceRecord.member_id == member.id,
-                ServiceRecord.date_of_service >= one_week_ago
-            ).order_by(ServiceRecord.date_of_service).all()
+                ServiceRecord.service_date >= one_week_ago
+            ).order_by(ServiceRecord.service_date).all()
             if not records:
                 print("No services recorded for this member.")
                 return
@@ -65,7 +32,7 @@ class ReportManager:
             with open(report_filename, 'w') as file:
                 file.write(
                     f"Member name: {member.name}\n"
-                    f"Member number: {member.number}\n"
+                    f"Member number: {member.id:09}\n"
                     f"Member street address: {member.street_address}\n"
                     f"Member city: {member.city}\n"
                     f"Member state: {member.state}\n"
@@ -75,7 +42,7 @@ class ReportManager:
                 file.write("Services:\n")
                 for record in records:
                     provider = session.query(Provider).get(record.provider_id)
-                    service = session.query(Service).filter_by(code=record.service_code).first()
+                    service = session.query(Service).filter_by(id=record.service_id).first()
                     file.write(
                         f"Date of service: {record.service_date.strftime('%m-%d-%Y')}\n"
                         f"Provider name: {provider.name}\n"
@@ -83,48 +50,22 @@ class ReportManager:
                     )
             print(f"Member report generated: {report_filename}")
 
-
     # Generates weekly report for Providers
     def generate_provider_report(self, provider_number):
-        """
-        For providers that have provided a service within the last week,
-        generate a report containing the list of services they have provided
-        to ChocAn members. At the end of the weekly report is a summary
-        including the total number of services provided and the total fee from
-        the services provided. The report must include:
-            • Provider name                             -> provider.name
-            • Provider number                           -> provider.number
-            • Provider street address                   -> provider.street_address
-            • Provider city                             -> provider.city
-            • Provider state                            -> provider.state
-            • Provider zip code                         -> provider.zip_code
-
-            • List of services provided during that week. For each service
-            provided, the following details are required:
-                o Date of service (MM-DD-YYYY)          -> record.service_date
-                o DB Timestamp (MM-DD-YYYY HH:MM:SS)    -> record.timestamp
-                o Member name                           -> member.name
-                o Member number                         -> member.number
-                o Service code                          -> service.code
-                o Fee to be paid (up to $999.99)        -> service.fee
-
-            • Total # of services provided (3 digits)   -> count of services
-            • Weekly fee total (up to $99,999.99)       -> sum of fees list
-        """
+        provider_id = int(provider_number)
+        one_week_ago = datetime.now() - timedelta(weeks=1)
         with self.db_manager.get_session() as session:
-            provider = session.query(Provider).filter_by(number=provider_number).first()
+            provider = session.query(Provider).filter_by(id=provider_id).first()
             if not provider:
                 print("Invalid provider number.")
                 return
             
-            one_week_ago = datetime.now() - timedelta(weeks=1)
             records = session.query(ServiceRecord).filter(
                 ServiceRecord.provider_id == provider.id,
                 ServiceRecord.timestamp >= one_week_ago
-            ).order_by(ServiceRecord.date_of_service).all()
-
+            ).order_by(ServiceRecord.service_date).all()
             if not records:
-                print("No services recorded for this provider in the past week.")
+                # print("No services recorded for this provider in the past week.")
                 return
 
             report_filename = f"{provider.name.replace(' ', '_')}_ \
@@ -133,30 +74,30 @@ class ReportManager:
             with open(report_filename, 'w') as file:
                 file.write(
                     f"Provider name: {provider.name}\n"
-                    f"Provider number: {provider.number}\n"
+                    f"Provider number: {provider.id:09}\n"
                     f"Provider street address: {provider.street_address}\n"
                     f"Provider city: {provider.city}\n"
                     f"Provider state: {provider.state}\n"
                     f"Provider ZIP code: {provider.zip_code}\n\n"
                 )
+
                 file.write("Services Provided:\n")
                 total_weekly_fee = 0
                 for record in records:
                     member = session.query(Member).get(record.member_id)
-                    service = session.query(Service).filter_by(code=record.service_code).first()
+                    service = session.query(Service).filter_by(id=record.service_id).first()
                     total_weekly_fee += service.fee
                     file.write(
                         f"  Date of service: {record.service_date.strftime('%m-%d-%Y')}\n" 
                         f"  Database timestamp: {record.timestamp.strftime('%m-%d-%Y %H:%M:%S')}\n"
                         f"  Member name: {member.name}\n"
-                        f"  Member number: {member.number}\n"
-                        f"  Service code: {service.code}\n" 
+                        f"  Member number: {member.id:09}\n"
+                        f"  Service code: {service.id:03}\n" 
                         f"  Service fee: $ {service.fee:.2f}\n\n"
                     )
                 file.write(f"Total Consultations: {len(records)}\n")
                 file.write(f"Total Fee: $ {total_weekly_fee:.2f}\n")
             print(f"Provider report generated: {report_filename}")
-
 
     # Accounts Payable Summary Report for Manager
     def generate_summary_report(self):
@@ -164,13 +105,13 @@ class ReportManager:
         A summary report is given to the manager for accounts payable.
         The report lists every provider to be paid that week.
         """
+        one_week_ago = datetime.now() - timedelta(weeks=1)
         with self.db_manager.get_session() as session:
             providers = session.query(Provider).all()
             total_providers = 0
             total_consultations = 0
             total_fees = 0
-            
-            one_week_ago = datetime.now() - timedelta(weeks=1)
+        
             report_filename = f"Manager_Summary_{datetime.now().strftime('%Y%m%d')}.txt"
             with open(report_filename, 'w') as file:
                 file.write(
@@ -184,6 +125,7 @@ class ReportManager:
                     "────────────┼────────────────────────────┼───────┼────────────\n"
                 )
                 for provider in providers:
+                    fee_total = 0
                     records = session.query(ServiceRecord).filter(
                         ServiceRecord.provider_id == provider.id,
                         ServiceRecord.timestamp >= one_week_ago
@@ -194,7 +136,7 @@ class ReportManager:
                             fee_total += session.query(Service).filter_by(
                                 code=record.service_code
                             ).first().fee
-                        file.write(f" {provider.number:<9}  │ {provider.name:<25} │  {record_count:>3}  │ $ {fee_total:>8.2f}\n")
+                        file.write(f" {provider.id:09}  │ {provider.name:<25} │  {record_count:>3}  │ $ {fee_total:>8.2f}\n")
                         total_providers += 1
                         total_consultations += len(records)
                         total_fees += fee_total
@@ -207,34 +149,51 @@ class ReportManager:
                 )
             print(f"Manager summary report generated: {report_filename}")
 
+    # For the EFT data, all that is required is that a file be set up containing
+    # the provider name, provider number, and the amount to be transferred.
+    def generate_eft_data(self):
+        one_week_ago = datetime.now() - timedelta(weeks=1)
 
-"""
-file.write("╔════════════════════════════════╗\n")
-file.write("║ Chocoholics Anonymous (ChocAn) ║\n")
-file.write("╚════════════════════════════════╝\n")
-file.write("Accounts Payable Weekly Summary Report\n")
-file.write("WEEK OF: 01-01-2021\n\n")
-file.write("────────────┬────────────────────────────┬───────┬────────────\n")
-file.write(" PROVIDER # │ PROVIDER NAME              │ CONS¹ │ FEE TOTAL\n")
-file.write("────────────┼────────────────────────────┼───────┼────────────\n")
-file.write(f" {provider_number:<9}  │ {provider_name:<25}  │  {consultations:>3}  │ $ {weekly_fee:>8.2f} \n")
-file.write("────────────┴────────────────────────────┴───────┴────────────\n")
-file.write(" ¹: Consultationss\n\n")
-file.write(f"Weekly Total Providers...................... {total_providers}\n")
-file.write(f"Weekly Total Consultations.................. {total_consultations}\n")
-file.write(f"Weekly Total Fee............................ $ {total_fee:.2f}\n")
+        with self.db_manager.get_session() as session:
+            providers = session.query(Provider).all()
 
+            eft_filename = f"EFT_Data_{datetime.now().strftime('%Y%m%d')}.txt"
+            with open(eft_filename, 'w') as file:
+                file.write("Provider EFT Data:\n")
+                file.write("Provider Name, Provider Number, Total Fee\n")
+                for provider in providers:
+                    records = session.query(ServiceRecord).filter(
+                        ServiceRecord.provider_id == provider.id,
+                        ServiceRecord.timestamp >= one_week_ago
+                    ).order_by(ServiceRecord.service_date).all()
+                    total_fee = sum(session.query(Service).filter_by(id=record.service_id).first().fee for record in records)
+                    
+                    if total_fee > 0:
+                        file.write(f"{provider.name}, {provider.id:09}, ${total_fee:.2f}\n")
+            print(f"EFT data generated: {eft_filename}")
 
- PROVIDER # │ PROVIDER NAME              │ CONS¹ │ FEE TOTAL  
- ───────────┼────────────────────────────┼───────┼───────────
- 123456789  │ John Smith                 │   20  │ $  1500.00
- 987654321  │ Mary Johnson               │   30  │ $  2800.00
- 456789123  │ Robert Brown               │   12  │ $   850.00
- 999999999  │ MaximumPossibleNameLength  │  999  │ $ 99999.99
- 000000000  │ Short Name                 │    1  │ $     0.01
+    def run_main_accounting_procedure(self):
+        with self.db_manager.get_session() as session:
+            providers = session.query(Provider).all()
+            for provider in providers:
+                self.generate_provider_report(provider.id)
+            
+            members = session.query(Member).all()
+            for member in members:
+                self.generate_member_report(member.id)
+    
+        self.generate_eft_data()
+        self.generate_summary_report()
+        print("Main accounting procedure complete.")
 
-Weekly Total Providers.................... 99
-Weekly Total Consultations................ 9999
-Weekly Total Fee.......................... $ 9,999,999.99
-
-"""
+    # Generates Provider Directory
+    def generate_provider_directory(self):
+        with self.db_manager.get_session() as session:
+            services = session.query(Service).all()
+            directory_filename = f"ProviderDirectory_{datetime.now().strftime('%Y%m%d')}.txt"
+            with open(directory_filename, 'w') as file:
+                file.write("Provider Directory:\n")
+                file.write("Service Code, Service Name, Fee\n")
+                for service in services:
+                    file.write(f"{service.code}, {service.name}, ${service.fee:.2f}\n")
+            print(f"Provider directory generated: {directory_filename}")

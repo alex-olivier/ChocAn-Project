@@ -1,5 +1,6 @@
 from re import match
 
+
 # Validate user input with retry on failure
 def prompt_until_valid(regex, prompt_message, error_message) -> str:
     while True:

@@ -1,7 +1,6 @@
 from database_manager import DatabaseManager
 from report_manager import ReportManager
 from service_manager import ServiceManager
-from eft_manager import EFTManager
 from input_validation import prompt_until_valid
 from constants import DATABASE_URL
 
@@ -25,8 +24,7 @@ class ManagerTerminal:
                 "Invalid choice. Please try again."
             )
             if choice == "1":  # Report Management
-                # TODO: Report Management
-                pass
+                self.report_management()
             elif choice == "2":  # Generate Provider Directory
                 ServiceManager().view_services
                 pass
@@ -36,6 +34,7 @@ class ManagerTerminal:
                 print("Error occurred. Exiting...")
 
     def report_management(self):
+            report_manager = ReportManager(self.db_manager)
             print("\n---------------------------------------------------")
             print("Manager Terminal > Report Management")
             print("---------------------------------------------------")
@@ -54,7 +53,8 @@ class ManagerTerminal:
                 "Invalid choice. Please try again."
             )
             if choice == "1":  # Main Accounting Procedure
-                # TODO: Main Accounting Procedure
+                # TODO: Run Main Accounting Procedure
+                
                 pass
             elif choice == "2":  # Generate Summary Report
                 # TODO: Generate Summary Report
@@ -66,17 +66,16 @@ class ManagerTerminal:
                     "\nEnter member number: ",
                     "Member number must be 9 digits."
                 )
-                ReportManager(self.db_manager).generate_member_report(member_number)
+                report_manager.generate_member_report(member_number)
             elif choice == "4":  # Generate Provider Report
                 provider_number = prompt_until_valid(
                     r'^\d{9}$',
                     "\nEnter provider number: ",
                     "Provider number must be 9 digits."
                 )
-                ReportManager(self.db_manager).generate_provider_report(provider_number)
+                report_manager.generate_provider_report(provider_number)
             elif choice == "5":  # Generate EFT Data
-                EFTManager(self.db_manager).generate_eft_data()
-                pass
+                report_manager.generate_eft_data()
             elif choice == "6":
                 print("Exiting... Goodbye!")
             else:
