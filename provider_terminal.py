@@ -1,9 +1,11 @@
 from database_manager import DatabaseManager
-from person_manager import MemberManager, ProviderManager
+from person_manager import (MemberManager, ProviderManager)
 from record_manager import RecordManager
 from service_manager import ServiceManager
 from utils import prompt_until_valid
-from constants import DATABASE_URL
+from constants import (
+    DATABASE_URL, ACCOUNT_NUM_LEN, SERVICE_CODE_LEN
+)
 
 
 class ProviderTerminal:
@@ -22,30 +24,30 @@ class ProviderTerminal:
 
             choice = prompt_until_valid(
                 r'^[1-4]$',
-                "\n>> ",
+                "\n>> Enter your choice: ",
                 "Invalid choice. Please try again."
             )
             if choice == "1":
                 member_number = prompt_until_valid(
-                    r'^\d{9}$',
+                    rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
                     ">> Enter member number to delete: ",
                     "Member number must be 9 digits."
                 )
                 MemberManager(self.db_manager).is_valid_member(member_number)
             elif choice == "2":
                 member_number = prompt_until_valid(
-                    r'^\d{9}$',
+                    rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
                     ">> Enter member number: ",
                     "Member number must be 9 digits."
                 )
                 MemberManager(self.db_manager).is_valid_member(member_number)
                 service_code = prompt_until_valid(
-                    r'^\d{6}$',
+                    rf'^\d{{{SERVICE_CODE_LEN}}}$',
                     ">> Enter service code: ",
                     "Service code must be 6 digits."
                 )
                 date_of_service = prompt_until_valid(
-                    r'^\d{2}-\d{2}-\d{4}$',
+                    r'^\d{2}-\d{2}-\d{4}$',  # MM-DD-YYYY
                     ">> Enter date of service (MM-DD-YYYY): ",
                     "Date must be in the format MM-DD-YYYY."
                 )
@@ -67,7 +69,7 @@ class ProviderTerminal:
 
     def run(self):
         provider_number = prompt_until_valid(
-            r'^\d{9}$',
+            rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
             ">> Enter provider number: ",
             "Provider number must be 9 digits."
         )

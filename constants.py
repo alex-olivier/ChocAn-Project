@@ -1,35 +1,38 @@
-# Stores constants for the program
+# This module defines constants used throughout the program.
 """
-This module defines constants used throughout the program.
-
-Constants:
+Database constants:
     DATABASE_URL (str): The default URL for the database connection.
 
-    NUMBER_LEN (int): Length of the person's number.
-    NAME_MIN_LEN (int): Minimum length for the person's name.
-    NAME_MAX_LEN (int): Maximum length for the person's name.
-    STREET_ADDRESS_MIN_LEN (int): Minimum length for the person's street address.
-    STREET_ADDRESS_MAX_LEN (int): Maximum length for the person's street address.
-    CITY_MIN_LEN (int): Minimum length for the person's city.
-    CITY_MAX_LEN (int): Maximum length for the person's city.
-    STATE_LEN (int): Length of the person's state abbreviation.
-    ZIP_CODE_LEN (int): Length of the person's ZIP code.
-    STATUS_ACTIVE (bool): Status for an active member.
-    STATUS_SUSPENDED (bool): Status for a suspended member.
+Member/Provider constants:
+    NAME_MIN_LEN (int): Minimum length of a person's name.
+    NAME_MAX_LEN (int): Maximum length of a person's name.
+    STREET_ADDRESS_MIN_LEN (int): Minimum length of a person's street address.
+    STREET_ADDRESS_MAX_LEN (int): Maximum length of a person's street address.
+    CITY_MIN_LEN (int): Minimum length of a person's city.
+    CITY_MAX_LEN (int): Maximum length of a person's city.
+    STATE_LEN (int): Length of a person's state abbreviation.
+    ZIP_CODE_LEN (int): Length of a person's ZIP code.
+    ACCOUNT_NUM_LEN (int): Length of an account number.
+
+Member constants
+    MEMBER_STATUS_ACTIVE (bool): Status of an active member.
+    MEMBER_STATUS_SUSPENDED (bool): Status of a suspended member.
     
-    SERVICE_CODE_LEN (int): Length of the service code.
-    SERVICE_NAME_MIN_LEN (int): Minimum length for the service name.
-    SERVICE_NAME_MAX_LEN (int): Maximum length for the service name.
+Service constants:
+    SERVICE_CODE_LEN (int): Length of a service code.
+    SERVICE_NAME_MIN_LEN (int): Minimum length of a service name.
+    SERVICE_NAME_MAX_LEN (int): Maximum length of a service name.
     SERVICE_FEE_MAX (float): Maximum fee for a service.
+
+Service Record constants:
+    SERVICERECORD_COMMENT_MAX_LEN (int): Maximum length of service record comments.
     
-    SERVICERECORD_COMMENT_MAX_LEN (int): Maximum length for comments in the service record.
 """
 
-# Database
+# Database constants
 DATABASE_URL = "sqlite:///chocan.db"
 
-# Members/Providers attributes
-NUMBER_LEN = 9 # Length of the person's number.
+# Member/Provider constants
 NAME_MIN_LEN = 1
 NAME_MAX_LEN = 25
 STREET_ADDRESS_MIN_LEN = 1
@@ -38,16 +41,17 @@ CITY_MIN_LEN = 1
 CITY_MAX_LEN = 14
 STATE_LEN = 2
 ZIP_CODE_LEN = 5
+ACCOUNT_NUM_LEN = 9
 
-# Member attribute
+# Member constants
 MEMBER_STATUS_ACTIVE = True
 MEMBER_STATUS_SUSPENDED = False
 
-# Services attributes
+# Service constants
 SERVICE_CODE_LEN = 6
 SERVICE_NAME_MIN_LEN = 1
 SERVICE_NAME_MAX_LEN = 20
 SERVICE_FEE_MAX = 999.99
 
-# Service Records attribute
-SVCRECORD_COMMENT_MAX_LEN = 100
+# ServiceRecord constants
+SERVICERECORD_COMMENT_MAX_LEN = 100

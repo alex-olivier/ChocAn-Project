@@ -2,7 +2,7 @@ from database_manager import DatabaseManager
 from report_manager import ReportManager
 from service_manager import ServiceManager
 from utils import prompt_until_valid
-from constants import DATABASE_URL
+from constants import DATABASE_URL, ACCOUNT_NUM_LEN
 
 
 class ManagerTerminal:
@@ -20,7 +20,7 @@ class ManagerTerminal:
 
             choice = prompt_until_valid(
                 r'^[1-4]$',
-                "\n>> ",
+                "\n>> Enter your choice: ",
                 "Invalid choice. Please try again."
             )
             if choice == "1":  # Report Management
@@ -49,7 +49,7 @@ class ManagerTerminal:
 
             choice = prompt_until_valid(
                 r'^[1-4]$',
-                "\n>> ",
+                "\n>> Enter your choice: ",
                 "Invalid choice. Please try again."
             )
             if choice == "1":  # Main Accounting Procedure
@@ -61,7 +61,7 @@ class ManagerTerminal:
             elif choice == "3":  # Gemerate Member Report
                 print("\nGenerating member report...")
                 member_number = prompt_until_valid(
-                    r'^\d{9}$',
+                    rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
                     "\n>> Enter member number: ",
                     "Member number must be 9 digits."
                 )
@@ -69,7 +69,7 @@ class ManagerTerminal:
             elif choice == "4":  # Generate Provider Report
                 print("\nGenerating provider report...")
                 provider_number = prompt_until_valid(
-                    r'^\d{9}$',
+                    rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
                     "\n>> Enter provider number: ",
                     "Provider number must be 9 digits."
                 )

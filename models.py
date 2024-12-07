@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from constants import (
     NAME_MAX_LEN, STREET_ADDRESS_MAX_LEN, CITY_MAX_LEN, STATE_LEN, ZIP_CODE_LEN,
-    STATUS_ACTIVE, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX, SERVICERECORD_COMMENT_MAX_LEN
+    MEMBER_STATUS_ACTIVE, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX, SERVICERECORD_COMMENT_MAX_LEN
 )
 
 
@@ -21,7 +21,7 @@ class Member(Base):
     city = Column(String(CITY_MAX_LEN), nullable=False)
     state = Column(String(STATE_LEN), nullable=False)
     zip_code = Column(String(ZIP_CODE_LEN), nullable=False)
-    status = Column(Boolean, nullable=False, default=STATUS_ACTIVE)
+    status = Column(Boolean, nullable=False, default=MEMBER_STATUS_ACTIVE)
 
     service_records = relationship('ServiceRecord', back_populates='member')
 
@@ -52,7 +52,7 @@ class Member(Base):
         self.city = city
         self.state = state
         self.zip_code = zip_code
-        self.status = STATUS_ACTIVE  # Explicitly set status to STATUS_ACTIVE
+        self.status = MEMBER_STATUS_ACTIVE  # Explicitly set status to STATUS_ACTIVE
 
 
 class Provider(Base):

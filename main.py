@@ -14,7 +14,7 @@ def main_menu():
 
         choice = prompt_until_valid(
             r'^[1-4]$',
-            "\nEnter your choice: ",
+            "\n>> Enter your choice: ",
             "Invalid choice. Please try again."
         )
         if choice == "1":
@@ -24,9 +24,9 @@ def main_menu():
         elif choice == "3":
             ProviderTerminal().run()
         elif choice == "4":
-            print("Exiting... Goodbye!")
+            print("\nExiting... Goodbye!")
         else:
-            print("Error occurred. Exiting...")
+            print("\nError occurred. Exiting...")
 
 # TODO: Fix main() to call the correct functions
 if __name__ == "__main__":

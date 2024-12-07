@@ -16,7 +16,7 @@ class ReportManager:
         with self.db_manager.get_session() as session:
             member = session.query(Member).filter_by(id=member_id).first()
             if not member:
-                print("Invalid member number.")
+                print("\nInvalid member number.")
                 return
             
             records = session.query(ServiceRecord).filter(
@@ -24,12 +24,14 @@ class ReportManager:
                 ServiceRecord.service_date >= one_week_ago
             ).order_by(ServiceRecord.service_date).all()
             if not records:
-                print("No services recorded for this member.")
+                # print("\nNo services recorded for this member.")
                 return
 
-            report_filename = f"{member.name.replace(' ', '_')}_ \
-                                {datetime.now().strftime('%Y%m%d')}_ \
-                                MemberReport.txt"
+            report_filename = (
+                f"{member.name.replace(' ', '_')}_"
+                f"{datetime.now().strftime('%Y%m%d')}_"
+                "MemberReport.txt"
+            )
             with open(report_filename, 'w') as file:
                 file.write(
                     f"Member name: {member.name}\n"
@@ -49,7 +51,7 @@ class ReportManager:
                         f"Provider name: {provider.name}\n"
                         f"Service name: {service.name}\n\n"
                     )
-            print(f"\n✓ Member report generated: {report_filename}")
+            print(f"\nMember report generated: {report_filename}")
 
     # Generates weekly report for Providers
     def generate_provider_report(self, provider_number):
@@ -58,7 +60,7 @@ class ReportManager:
         with self.db_manager.get_session() as session:
             provider = session.query(Provider).filter_by(id=provider_id).first()
             if not provider:
-                print("Invalid provider number.")
+                print("\nInvalid provider number.")
                 return
             
             records = session.query(ServiceRecord).filter(
@@ -69,20 +71,32 @@ class ReportManager:
                 # print("No services recorded for this provider in the past week.")
                 return
 
-            report_filename = f"{provider.name.replace(' ', '_')}_ \
-                                {datetime.now().strftime('%Y%m%d')}_ \
-                                ProviderReport.txt"
+            report_filename = (
+                f"{provider.name.replace(' ', '_')}"
+                f"_{datetime.now().strftime('%Y%m%d')}"
+                "_ProviderReport.txt"
+            )
             with open(report_filename, 'w') as file:
                 file.write(
-                    f"Provider name: {provider.name}\n"
-                    f"Provider number: {provider.id:09}\n"
-                    f"Provider street address: {provider.street_address}\n"
-                    f"Provider city: {provider.city}\n"
-                    f"Provider state: {provider.state}\n"
-                    f"Provider ZIP code: {provider.zip_code}\n\n"
+                    "╔════════════════════════════════╗\n"
+                    "║ Chocoholics Anonymous (ChocAn) ║\n"
+                    "╚════════════════════════════════╝\n"
+                    "Provider Weekly Report\n\n"
+                    # f"WEEK OF: {one_week_ago.strftime('%m-%d-%Y')}\n\n"
+                    "Provider Information:\n"
+                    f"  Name:     {provider.name}\n"
+                    f"  Number:   {provider.id:09}\n"
+                    f"  Street:   {provider.street_address}\n"
+                    f"  City:     {provider.city}\n"
+                    f"  State:    {provider.state}\n"
+                    f"  ZIP Code: {provider.zip_code}\n\n"
                 )
 
-                file.write("Services Provided:\n")
+                file.write(
+                    f"Services provided from "
+                    f"{one_week_ago.strftime('%m-%d-%Y')} to "
+                    f"{datetime.now().strftime('%m-%d-%Y')}:\n"
+                )
                 total_weekly_fee = 0
                 for record in records:
                     member = session.query(Member).get(record.member_id)

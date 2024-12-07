@@ -18,7 +18,7 @@ class RecordManager:
             member = session.query(Member).filter_by(id=member_id).first()
             service = session.query(Service).filter_by(id=service_id).first()
             if not provider or not member or not service:
-                print("Invalid provider, member, or service code.")
+                print("\nInvalid provider, member, or service code.")
                 return
 
             new_service_record = ServiceRecord(
@@ -30,4 +30,4 @@ class RecordManager:
             )
             session.add(new_service_record)
             session.commit()
-            print(f">> Service recorded for {member.name} by {provider.name}")
+            print(f"\n>> Service recorded for {member.name} by {provider.name}")
