@@ -14,6 +14,8 @@ Constants:
     CITY_MAX_LEN (int): Maximum length for the person's city.
     STATE_LEN (int): Length of the person's state abbreviation.
     ZIP_CODE_LEN (int): Length of the person's ZIP code.
+    STATUS_ACTIVE (bool): Status for an active member.
+    STATUS_SUSPENDED (bool): Status for a suspended member.
     
     SERVICE_CODE_LEN (int): Length of the service code.
     SERVICE_NAME_MIN_LEN (int): Minimum length for the service name.
@@ -26,7 +28,7 @@ Constants:
 # Database
 DATABASE_URL = "sqlite:///chocan.db"
 
-# Members/Providers
+# Members/Providers attributes
 NUMBER_LEN = 9 # Length of the person's number.
 NAME_MIN_LEN = 1
 NAME_MAX_LEN = 25
@@ -36,14 +38,16 @@ CITY_MIN_LEN = 1
 CITY_MAX_LEN = 14
 STATE_LEN = 2
 ZIP_CODE_LEN = 5
-ACTIVE = True
-SUSPENDED = False
 
-# Services
+# Member attribute
+MEMBER_STATUS_ACTIVE = True
+MEMBER_STATUS_SUSPENDED = False
+
+# Services attributes
 SERVICE_CODE_LEN = 6
 SERVICE_NAME_MIN_LEN = 1
 SERVICE_NAME_MAX_LEN = 20
 SERVICE_FEE_MAX = 999.99
 
-# Service Records
-SERVICERECORD_COMMENT_MAX_LEN = 100
+# Service Records attribute
+SVCRECORD_COMMENT_MAX_LEN = 100

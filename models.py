@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from constants import (
     NAME_MAX_LEN, STREET_ADDRESS_MAX_LEN, CITY_MAX_LEN, STATE_LEN, ZIP_CODE_LEN,
-    ACTIVE, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX, SERVICERECORD_COMMENT_MAX_LEN
+    STATUS_ACTIVE, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX, SERVICERECORD_COMMENT_MAX_LEN
 )
 
 
@@ -21,7 +21,7 @@ class Member(Base):
     city = Column(String(CITY_MAX_LEN), nullable=False)
     state = Column(String(STATE_LEN), nullable=False)
     zip_code = Column(String(ZIP_CODE_LEN), nullable=False)
-    status = Column(Boolean, nullable=False, default=ACTIVE)
+    status = Column(Boolean, nullable=False, default=STATUS_ACTIVE)
 
     service_records = relationship('ServiceRecord', back_populates='member')
 
@@ -36,16 +36,28 @@ class Member(Base):
     )
 
     def __repr__(self) -> str:
-        return (f"Member(name={self.name!r}, \
-                street_address={self.street_address!r}, \
-                city={self.city!r}, \
-                state={self.state!r}, \
-                zip_code={self.zip_code!r}, \
-                status={self.status!r})")
+        return (
+            f"Member(number={self.id:09}, "
+            f"name={self.name!r}, "
+            f"street_address={self.street_address!r}, "
+            f"city={self.city!r}, "
+            f"state={self.state!r}, "
+            f"zip_code={self.zip_code!r}, "
+            f"status={self.status!r})"
+        )
+
+    def __init__(self, name, street_address, city, state, zip_code):
+        self.name = name
+        self.street_address = street_address
+        self.city = city
+        self.state = state
+        self.zip_code = zip_code
+        self.status = STATUS_ACTIVE  # Explicitly set status to STATUS_ACTIVE
 
 
 class Provider(Base):
     __tablename__ = 'providers'
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(NAME_MAX_LEN), nullable=False)
     street_address = Column(String(STREET_ADDRESS_MAX_LEN), nullable=False)
@@ -61,11 +73,21 @@ class Provider(Base):
     )
 
     def __repr__(self) -> str:
-        return (f"Provider(name={self.name!r}, \
-                street_address={self.street_address!r}, \
-                city={self.city!r}, \
-                state={self.state!r}, \
-                zip_code={self.zip_code!r})")
+        return (
+            f"Provider(number={self.id:09}, "
+            f"name={self.name!r}, "
+            f"street_address={self.street_address!r}, "
+            f"city={self.city!r}, "
+            f"state={self.state!r}, "
+            f"zip_code={self.zip_code!r})"
+        )
+    
+    def __init__(self, name, street_address, city, state, zip_code):
+        self.name = name
+        self.street_address = street_address
+        self.city = city
+        self.state = state
+        self.zip_code = zip_code
 
 
 class Service(Base):
@@ -85,9 +107,11 @@ class Service(Base):
     )
     
     def __repr__(self) -> str:
-        return (f"Service(code={self.id!r}, \
-                name={self.name!r}, \
-                fee={self.fee!r})")
+        return (
+            f"Service(code={self.id:06}, "
+            f"name={self.name!r}, "
+            f"fee={self.fee!r})"
+        )
 
 
 class ProviderService(Base):
@@ -122,9 +146,11 @@ class ServiceRecord(Base):
     )
 
     def __repr__(self) -> str:
-        return (f"ServiceRecord(provider_id={self.provider_id!r}, \
-                member_id={self.member_id!r}, \
-                service_id={self.service_id!r}, \
-                service_date={self.service_date!r}, \
-                timestamp={self.timestamp!r}, \
-                comments={self.comments!r})")
+        return (
+            f"ServiceRecord(provider_id={self.provider_id:09}, "
+            f"member_id={self.member_id:09}, "
+            f"service_id={self.service_id:06}, "
+            f"service_date={self.service_date!r}, "
+            f"timestamp={self.timestamp!r}, "
+            f"comments={self.comments!r})"
+        )
