@@ -7,7 +7,6 @@ class RecordManager:
     def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
 
-    # TODO: Finish implementing this method and make it work outside of main.py
     def record_service(self, provider_number, member_number, service_code, date_of_service, comments=None):
         provider_id = int(provider_number)
         member_id = int(member_number)
