@@ -9,7 +9,7 @@ class ServiceManager:
         with self.db_manager.get_session() as session:
             new_service = Service(name=name, fee=fee)
             session.add(new_service)
-            print(f"Added service: {name} with code {new_service.code}")
+            print(f">> Added service: {name} with code {new_service.code}")
 
     def update_service(self, service_code, **kwargs):
      with self.db_manager.get_session() as session:
@@ -23,7 +23,7 @@ class ServiceManager:
                 if key not in ['code']:
                     setattr(service, key, value)
                     
-            print(f"Updated service with code {service_code}")
+            print(f">> Updated service with code {service_code}")
 
     def delete_service(self, service_code):
         with self.db_manager.get_session() as session:

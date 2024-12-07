@@ -30,4 +30,4 @@ class RecordManager:
             )
             session.add(new_service_record)
             session.commit()
-            print(f"Service recorded for {member.name} by {provider.name}")
+            print(f">> Service recorded for {member.name} by {provider.name}")
