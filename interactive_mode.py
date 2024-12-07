@@ -124,6 +124,7 @@ class InteractiveMode:
             print("  3. City")
             print("  4. State")
             print("  5. ZIP Code")
+            print("  6. Change status")
 
             field_choice = prompt_until_valid(
                 r'^[1-5]$',
@@ -166,8 +167,8 @@ class InteractiveMode:
                     f"  ZIP Code must include {ZIP_CODE_LEN} digits."
                 )
                 kwargs = {"zip_code": new_value}
-            elif field_choice = "6":
-                new_value = input("Enter new )
+            elif field_choice == "6":
+                new_value = input("Enter new ")
 
             member_manager.update_member(member_number, **kwargs)
         elif choice == "3":  # Delete a member

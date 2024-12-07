@@ -16,8 +16,8 @@ from constants import (
 )
 
 # @listens_for(Member, "before_insert")
-# def set_member_is_active(_mapper, _connection, target):
-#     target.is_active = True
+# def set_member_status(_mapper, _connection, target):
+#     target.status = True
 
 
 # Event Listeners to perform validation in Python so errors can be 
