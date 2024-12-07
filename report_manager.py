@@ -48,7 +48,7 @@ class ReportManager:
                         f"Provider name: {provider.name}\n"
                         f"Service name: {service.name}\n\n"
                     )
-            print(f"Member report generated: {report_filename}")
+            print(f"\n✓ Member report generated: {report_filename}")
 
     # Generates weekly report for Providers
     def generate_provider_report(self, provider_number):
@@ -170,9 +170,9 @@ class ReportManager:
                     
                     if total_fee > 0:
                         file.write(f"{provider.name}, {provider.id:09}, ${total_fee:.2f}\n")
-            print(f"EFT data generated: {eft_filename}")
+            print(f"> EFT data generated: {eft_filename}")
 
-    def run_main_accounting_procedure(self):
+    def main_accounting_procedure(self):
         with self.db_manager.get_session() as session:
             providers = session.query(Provider).all()
             for provider in providers:

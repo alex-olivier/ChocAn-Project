@@ -17,7 +17,7 @@ class PersonManager:
                 zip_code=zip_code
             )
             session.add(new_person)
-            print(f"Added {person_class.__name__.lower()}: {name}")
+            print(f"\nAdded {person_class.__name__.lower()}: {name}")
 
     def update_person(self, person_class, person_number, **kwargs):
         person_id = int(person_number)  # converting to int strips leading zeroes
@@ -26,14 +26,14 @@ class PersonManager:
                 id=person_id
             ).first()
             if not person:
-                print(f"{person_class.__name__.lower()} with id {person_id:09} not found.")
+                print(f"\n{person_class.__name__.lower()} with id {person_id:09} not found.")
                 return
 
             for key, value in kwargs.items():
                 if key not in ['id', 'number']:
                     setattr(person, key, value)
                     
-            print(f"Updated {person_class.__name__.lower()} with id {person_id:09}")
+            print(f"\nUpdated {person_class.__name__.lower()} with id {person_id:09}")
 
     def delete_person(self, person_class, person_number):
         person_id = int(person_number)  # converting to int strips leading zeroes
@@ -42,11 +42,11 @@ class PersonManager:
                 id=person_id
             ).first()
             if not person:
-                print(f"{person_class.__name__.lower()} with id {person_id:09} not found.")
+                print(f"\n{person_class.__name__.lower()} with id {person_id:09} not found.")
                 return
 
             session.delete(person)
-            print(f"Deleted {person_class.__name__.lower()} with id {person_id:09}")
+            print(f"\nDeleted {person_class.__name__.lower()} with id {person_id:09}")
         
     def view_persons(self, person_class):
         with self.db_manager.get_session() as session:
@@ -86,15 +86,14 @@ class MemberManager(PersonManager):
             with self.db_manager.get_session() as session:
                 member = session.query(Member).filter_by(id=member_id).first()
                 if member.is_valid:
-                    print ("Validated")
+                    print ("\nValidated")
                     return True
                 else:
-                    print ("Member Suspended")
+                    print ("\nMember Suspended")
                     return False        
         else:
-            print("Invalid Number")
+            print("\nInvalid Number")
             return False
-
 
 # Handles the management of ChocAn providers
 class ProviderManager(PersonManager):

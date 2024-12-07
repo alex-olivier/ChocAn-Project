@@ -22,28 +22,28 @@ class InteractiveMode:
     def prompt_person_details(self) -> tuple:
         name = prompt_until_valid(
             rf'^.{{{NAME_MIN_LEN},{NAME_MAX_LEN}}}$',
-            "  Name: ",
-            f"  Name must be up to {NAME_MAX_LEN} characters."
+            ">> Name: ",
+            f"Name must be up to {NAME_MAX_LEN} characters."
         )
         street_address = prompt_until_valid(
             rf'^.{{{STREET_ADDRESS_MIN_LEN},{STREET_ADDRESS_MAX_LEN}}}$',
-            "  Street Address: ",
-            f"  Street Address must be up to {STREET_ADDRESS_MAX_LEN} characters."
+            ">> Street Address: ",
+            f"Street Address must be up to {STREET_ADDRESS_MAX_LEN} characters."
         )
         city = prompt_until_valid(
             rf'^.{{{CITY_MIN_LEN},{CITY_MAX_LEN}}}$',
-            "  City: ",
-            f"  City must be up to {CITY_MAX_LEN} characters."
+            ">> City: ",
+            f"City must be up to {CITY_MAX_LEN} characters."
         )
         state = prompt_until_valid(
             rf'^[A-Z]{{{STATE_LEN}}}$',
-            "  State: ",
-            f"  State must include {STATE_LEN} uppercase letters."
+            ">> State: ",
+            f"State must include {STATE_LEN} uppercase letters."
         )
         zip_code = prompt_until_valid(
             rf'^\d{{{ZIP_CODE_LEN}}}$',
-            "  ZIP Code: ",
-            f"  ZIP Code must include {ZIP_CODE_LEN} digits."
+            ">> ZIP Code: ",
+            f"ZIP Code must include {ZIP_CODE_LEN} digits."
         )
         return name, street_address, city, state, zip_code
 
@@ -51,13 +51,13 @@ class InteractiveMode:
     def prompt_service_details(self) -> tuple:
         name = prompt_until_valid(
             rf'^.{{{SERVICE_NAME_MIN_LEN},{SERVICE_NAME_MAX_LEN}}}$',
-            "  Service Name: ",
-            f"  Service Name must be up to {SERVICE_NAME_MAX_LEN} characters)."
+            ">> Service Name: ",
+            f"Service Name must be up to {SERVICE_NAME_MAX_LEN} characters)."
         )
         fee = prompt_until_valid(
             r'^\d{1,3}(\.\d{1,2})?$'  # 0-999.99 (2 decimal places)
-            "  Service Fee: ",
-            f"  Service Fee cannot exceed ${SERVICE_FEE_MAX})."
+            ">> Service Fee: ",
+            f"Service Fee cannot exceed ${SERVICE_FEE_MAX})."
         )
         return name, float(fee)
 
@@ -73,7 +73,7 @@ class InteractiveMode:
         
         choice = prompt_until_valid(
             r'^[1-4]$',
-            "\nEnter your choice: ",
+            "\n>> Enter your choice: ",
             "Invalid choice. Please try again."
         )
         if choice == "1":
@@ -84,6 +84,7 @@ class InteractiveMode:
             self.service_management()
         elif choice == "4":
             print("Exiting... Goodbye!")
+            return
         else:
             print("Error occurred. Exiting...")
 
@@ -102,27 +103,77 @@ class InteractiveMode:
         
         choice = prompt_until_valid(
             r'^[1-5]$',
-            "\nEnter your choice: ",
+            "\n>> ",
             "Invalid choice. Please try again."
         )
         if choice == "1":  # Add a member
-            print("\nEnter member details --")
+            print("\nEnter member details")
             name, street_address, city, state, zip_code = self.prompt_person_details()
             member_manager.add_member(name, street_address, city, state, zip_code)
         elif choice == "2": # Update a member
-            # TODO: Implement ability for user to update specific fields
             member_number = prompt_until_valid(
                 r'^\d{9}$',
-                "\nEnter member number to update: ",
+                "\n>> Enter member number to update: ",
                 "Member number must be 9 digits."
             )
-            
-            kwargs = {}
-            member_manager.update_member(member_number, kwargs)
+
+            # Prompt the user to select the field to update
+            print("\nSelect the field to update:")
+            print("  1. Name")
+            print("  2. Street Address")
+            print("  3. City")
+            print("  4. State")
+            print("  5. ZIP Code")
+
+            field_choice = prompt_until_valid(
+                r'^[1-5]$',
+                "\n>> Enter your choice: ",
+                "Invalid choice. Please try again."
+            )
+
+            if field_choice == "1":
+                new_name = prompt_until_valid(
+                    rf'^.{{{NAME_MIN_LEN},{NAME_MAX_LEN}}}$',
+                    ">> New Name: ",
+                    f"Name must be up to {NAME_MAX_LEN} characters."
+                )
+                kwargs = {"name": new_name}
+            elif field_choice == "2":
+                new_street_address = prompt_until_valid(
+                    rf'^.{{{STREET_ADDRESS_MIN_LEN},{STREET_ADDRESS_MAX_LEN}}}$',
+                    ">> Street Address: ",
+                    f"  Street Address must be up to {STREET_ADDRESS_MAX_LEN} characters."
+                )
+                kwargs = {"street_address": new_value}
+            elif field_choice == "3":
+                new_city = prompt_until_valid(
+                    rf'^.{{{CITY_MIN_LEN},{CITY_MAX_LEN}}}$',
+                    ">> City: ",
+                    f"  City must be up to {CITY_MAX_LEN} characters."
+                )
+                kwargs = {"city": new_value}
+            elif field_choice == "4":
+                new_state = prompt_until_valid(
+                    rf'^[A-Z]{{{STATE_LEN}}}$',
+                    ">> State: ",
+                    f"  State must include {STATE_LEN} uppercase letters."
+                )
+                kwargs = {"state": new_value}
+            elif field_choice == "5":
+                new_zip_code = prompt_until_valid(
+                    rf'^\d{{{ZIP_CODE_LEN}}}$',
+                    ">> ZIP Code: ",
+                    f"  ZIP Code must include {ZIP_CODE_LEN} digits."
+                )
+                kwargs = {"zip_code": new_value}
+            elif field_choice = "6":
+                new_value = input("Enter new )
+
+            member_manager.update_member(member_number, **kwargs)
         elif choice == "3":  # Delete a member
             member_number = prompt_until_valid(
                 r'^\d{9}$',
-                "\nEnter member number to delete: ",
+                "\n>> Enter member number to delete: ",
                 "Member number must be 9 digits."
             )
             member_manager.delete_member(member_number)
@@ -146,25 +197,52 @@ class InteractiveMode:
         print("    3. Delete Provider")
         print("    4. View Providers")
         print("    5. Exit")
-        
+    
         choice = prompt_until_valid(
             r'^[1-5]$',
-            "\nEnter your choice: ",
+            "\n>> ",
             "Invalid choice. Please try again."
         )
         if choice == "1":  # Add a provider
-            print("\nEnter provider details --")
+            print("\nEnter provider details")
             name, street_address, city, state, zip_code = self.prompt_person_details()
             provider_manager.add_provider(name, street_address, city, state, zip_code)
         elif choice == "2": # Update a provider
-            # TODO: Implement ability to update specific fields
             provider_number = prompt_until_valid(
                 r'^\d{9}$',
-                "\nEnter provider number to update: ",
+                "\n>> Enter provider number to update: ",
                 "Provider number must be 9 digits."
             )
-            kwargs = {}
-            provider_manager.update_member(provider_number, kwargs)
+
+             # Prompt the user to select the field to update
+            print("\nSelect the field to update:")
+            print("  1. Name")
+            print("  2. Street Address")
+            print("  3. City")
+            print("  4. State")
+            print("  5. ZIP Code")
+
+            field_choice = prompt_until_valid(
+                r'^[1-5]$',
+                "\n>> ",
+                "Invalid choice. Please try again."
+            )
+            if field_choice == "1":
+                new_value = input(">> Enter new name: ")
+                kwargs = {"name": new_value}
+            elif field_choice == "2":
+                new_value = input(">> Enter new street address: ")
+                kwargs = {"street_address": new_value}
+            elif field_choice == "3":
+                new_value = input(">> Enter new city: ")
+                kwargs = {"city": new_value}
+            elif field_choice == "4":
+                new_value = input(">> Enter new state: ")
+                kwargs = {"state": new_value}
+            elif field_choice == "5":
+                new_value = input("Enter new ZIP code: ")
+                kwargs = {"zip_code": new_value}
+            provider_manager.update_member(provider_number, **kwargs)
         elif choice == "3":  # Delete a provider
             provider_number = prompt_until_valid(
                 r'^\d{9}$',
@@ -176,8 +254,10 @@ class InteractiveMode:
             provider_manager.view_providers()
         elif choice == "5":
             print("Exiting... Goodbye!")
+            return
         else:
             print("Error occurred. Exiting...")
+        return
 
     def service_management(self):
         service_manager = ServiceManager(self.db_manager)
@@ -194,7 +274,7 @@ class InteractiveMode:
 
         choice = prompt_until_valid(
             r'^[1-5]$',
-            "\nEnter your choice: ",
+            "\n>> ",
             "Invalid choice. Please try again."
         )
         if choice == "1":  # Add a service
@@ -211,7 +291,7 @@ class InteractiveMode:
         elif choice == "3":  # Delete Service
             service_code = prompt_until_valid(
                 r'^\d{6}$',
-                "\nEnter service code to delete: ",
+                "\n>> Enter service code to delete: ",
                 "Service code must be 6 digits."
             )
             service_manager.delete_service(service_code)
@@ -219,8 +299,12 @@ class InteractiveMode:
             service_manager.view_services()
         elif choice == "5":
             print("Exiting... Goodbye!")
+            return
         else:
             print("Error occurred. Exiting...")
+        return
 
     def run(self):
-        self.main_menu()
+        while True:
+            self.main_menu()
+            break

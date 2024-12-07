@@ -20,7 +20,7 @@ class ManagerTerminal:
 
             choice = prompt_until_valid(
                 r'^[1-4]$',
-                "\nEnter your choice: ",
+                "\n>> ",
                 "Invalid choice. Please try again."
             )
             if choice == "1":  # Report Management
@@ -49,28 +49,28 @@ class ManagerTerminal:
 
             choice = prompt_until_valid(
                 r'^[1-4]$',
-                "\nEnter your choice: ",
+                "\n>> ",
                 "Invalid choice. Please try again."
             )
             if choice == "1":  # Main Accounting Procedure
-                # TODO: Run Main Accounting Procedure
-                
-                pass
+                print("\nRunning main acccounting procedure...")
+                report_manager.main_accounting_procedure()
             elif choice == "2":  # Generate Summary Report
-                # TODO: Generate Summary Report
-
-                pass
+                print("\nGenerating summary report...")
+                report_manager.generate_summary_report()
             elif choice == "3":  # Gemerate Member Report
+                print("\nGenerating member report...")
                 member_number = prompt_until_valid(
                     r'^\d{9}$',
-                    "\nEnter member number: ",
+                    "\n>> Enter member number: ",
                     "Member number must be 9 digits."
                 )
                 report_manager.generate_member_report(member_number)
             elif choice == "4":  # Generate Provider Report
+                print("\nGenerating provider report...")
                 provider_number = prompt_until_valid(
                     r'^\d{9}$',
-                    "\nEnter provider number: ",
+                    "\n>> Enter provider number: ",
                     "Provider number must be 9 digits."
                 )
                 report_manager.generate_provider_report(provider_number)
@@ -82,5 +82,4 @@ class ManagerTerminal:
                 print("Error occurred. Exiting...")
 
     def run(self):
-        while True:
             self.main_menu()
