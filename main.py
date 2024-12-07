@@ -4,7 +4,6 @@ from provider_terminal import ProviderTerminal
 from string_utils import prompt_until_valid
 
 
-# TODO: Fix main_menu() to call the correct functions
 def main_menu():
         print("\nMain Menu")
         print("------------------------------")
@@ -29,7 +28,6 @@ def main_menu():
         else:
             print("\nError occurred. Exiting...")
 
-# TODO: Fix main() to call the correct functions
 if __name__ == "__main__":
     main_menu()
 
