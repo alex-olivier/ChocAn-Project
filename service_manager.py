@@ -10,7 +10,7 @@ class ServiceManager:
         with self.db_manager.get_session() as session:
             new_service = Service(name=name, fee=fee)
             session.add(new_service)
-            print(f"\nAdded service: {name} with code {new_service.id:0{SERVICE_CODE_LEN}}")
+            print(f"\nAdded service.")
 
     def update_service(self, service_code, **kwargs):
         service_id = int(service_code)
@@ -25,7 +25,7 @@ class ServiceManager:
                 if key not in ['code']:
                     setattr(service, key, value)
                     
-            print(f"\nUpdated service with code {service_code}")
+            print(f"\nUpdated service.")
 
     def delete_service(self, service_code):
         service_id = int(service_code)
@@ -37,10 +37,13 @@ class ServiceManager:
                 return
 
             session.delete(service)
-            print(f"\nDeleted service with code {service_code}")
+            print(f"\nDeleted service.")
 
     def view_services(self):
         with self.db_manager.get_session() as session:
             services = session.query(Service).all()
-            for service in services:
-                print(f"{service.id:06}: {service.name} - ${service.fee:.2f}")
+            if not services:
+                print("\nNo services found.")
+            else:
+                for service in services:
+                    print(f"{service.id:06}: {service.name} - ${service.fee:.2f}")

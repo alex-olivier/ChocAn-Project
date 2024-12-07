@@ -6,7 +6,8 @@ from string_utils import prompt_until_valid
 
 # TODO: Fix main_menu() to call the correct functions
 def main_menu():
-        print("Main Menu:")
+        print("\nMain Menu")
+        print("------------------------------")
         print("  1. Interactive Mode")
         print("  2. Manager Terminal")
         print("  3. Provider Terminal")

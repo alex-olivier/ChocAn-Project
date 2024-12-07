@@ -17,7 +17,7 @@ class PersonManager:
                 zip_code=zip_code
             )
             session.add(new_person)
-            print(f"\nAdded {person_class.__name__.lower()}: {name}")
+            print(f"\nAdded {person_class.__name__.lower()}.")
 
     def update_person(self, person_class, person_number, **kwargs):
         person_id = int(person_number)  # converting to int strips leading zeroes
@@ -33,7 +33,7 @@ class PersonManager:
                 if key not in ['id', 'number']:
                     setattr(person, key, value)
                     
-            print(f"\nUpdated {person_class.__name__.lower()} with id {person_id:09}")
+            print(f"\nUpdated {person_class.__name__.lower()}.")
 
     def delete_person(self, person_class, person_number):
         person_id = int(person_number)  # converting to int strips leading zeroes
@@ -46,13 +46,16 @@ class PersonManager:
                 return
 
             session.delete(person)
-            print(f"\nDeleted {person_class.__name__.lower()} with id {person_id:09}")
+            print(f"\nDeleted {person_class.__name__.lower()}.")
         
     def view_persons(self, person_class):
         with self.db_manager.get_session() as session:
             persons = session.query(person_class).all()
-            for person in persons:
-                print(f"{person.name}, {person.id:09}")
+            if not persons:
+                print(f"\nNo {person_class.__name__.lower()}s found.")
+            else:
+                for person in persons:
+                    print(f"{person.name}, {person.id:09}")
 
     def is_valid(self, person_class, person_number) -> bool:
         person_id = int(person_number)  # converting to int strips leading zeroes

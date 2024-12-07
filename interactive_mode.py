@@ -58,10 +58,11 @@ class InteractiveMode:
         return name, float(fee)
 
     def main_menu(self):
-        print("\n---------------------------------------------------")
-        print("Interactive Mode")
-        print("---------------------------------------------------")
-        print("Interactive Mode:")
+        # print("\n---------------------------------------------------")
+        # print("Interactive Mode")
+        # print("---------------------------------------------------")
+        # print("Interactive Mode:")
+        print("\nInteractive Mode:")
         print("  1. Member Management")
         print("  2. Provider Management")
         print("  3. Service Management")
@@ -89,10 +90,11 @@ class InteractiveMode:
     def member_management(self):
         member_manager = MemberManager(self.db_manager)
         while True:
-            print("\n---------------------------------------------------")
-            print("Interactive Mode > Member Management")
-            print("---------------------------------------------------")
-            print("Interactive Mode:")
+            # print("\n---------------------------------------------------")
+            # print("Interactive Mode > Member Management")
+            # print("---------------------------------------------------")
+            # print("Interactive Mode:")
+            print("\nInteractive Mode:")
             print("  Member Management:")
             print("    1. Add Member")
             print("    2. Update Member")
@@ -164,7 +166,7 @@ class InteractiveMode:
                         f"  ZIP Code must include {ZIP_CODE_LEN} digits."
                     )
                     kwargs = {"zip_code": new_zip_code}
-                # elif field_choice == "6":
+                # elif field_choice == "6": # TODO: finish update to member status 
                     # print("")
                     # new_status = 
                     # kwargs = {"status": new_status}
@@ -188,10 +190,11 @@ class InteractiveMode:
 
     def provider_management(self):
         provider_manager = ProviderManager(self.db_manager)
-        print("\n---------------------------------------------------")
-        print("Interactive Mode > Provider Management")
-        print("---------------------------------------------------")
-        print("Interactive Mode:")
+        # print("\n---------------------------------------------------")
+        # print("Interactive Mode > Provider Management")
+        # print("---------------------------------------------------")
+        # print("Interactive Mode:")
+        print("\nInteractive Mode:")
         print("  Provider Management:")
         print("    1. Add Provider")
         print("    2. Update Provider")
@@ -282,10 +285,11 @@ class InteractiveMode:
 
     def service_management(self):
         service_manager = ServiceManager(self.db_manager)
-        print("\n---------------------------------------------------")
-        print("Interactive Mode > Service Management")
-        print("---------------------------------------------------")
-        print("Interactive Mode:")
+        # print("\n---------------------------------------------------")
+        # print("Interactive Mode > Service Management")
+        # print("---------------------------------------------------")
+        # print("Interactive Mode:")
+        print("\nInteractive Mode:")
         print("  Service Management:")
         print("    1. Add Service")
         print("    2. Update Service")

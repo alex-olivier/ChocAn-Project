@@ -11,10 +11,11 @@ class ManagerTerminal:
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
 
     def main_menu(self):
-            print("\n---------------------------------------------------")
-            print("Manager Terminal")
-            print("---------------------------------------------------")
-            print("Manager Terminal:")
+            # print("\n---------------------------------------------------")
+            # print("Manager Terminal")
+            # print("---------------------------------------------------")
+            # print("Manager Terminal:")
+            print("\nManager Terminal:")
             print("  1. Report Management")
             print("  2. Generate Provider Directory")
             print("  3. Exit")
@@ -36,10 +37,11 @@ class ManagerTerminal:
 
     def report_management(self):
             report_manager = ReportManager(self.db_manager)
-            print("\n---------------------------------------------------")
-            print("Manager Terminal > Report Management")
-            print("---------------------------------------------------")
-            print("Manager Terminal:")
+            # print("\n---------------------------------------------------")
+            # print("Manager Terminal > Report Management")
+            # print("---------------------------------------------------")
+            # print("Manager Terminal:")
+            print("\nManager Terminal:")
             print("  Report Management:")
             print("    1. Main Accounting Procedure")
             print("    2. Generate Summary Report")

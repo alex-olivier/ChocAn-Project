@@ -14,10 +14,11 @@ class ProviderTerminal:
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
 
     def main_menu(self, provider_number):
-            print("\n---------------------------------------------------")
-            print("Provider Terminal")
-            print("---------------------------------------------------")
-            print("Provider Terminal:")
+            # print("\n---------------------------------------------------")
+            # print("Provider Terminal")
+            # print("---------------------------------------------------")
+            # print("Provider Terminal:")
+            print("\nProvider Terminal:")
             print("  1. Validate Member")
             print("  2. Record Service")
             print("  3. View Provider Directory")
