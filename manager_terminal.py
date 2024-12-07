@@ -1,7 +1,8 @@
+import sys
 from database_manager import DatabaseManager
 from report_manager import ReportManager
 from service_manager import ServiceManager
-from utils import prompt_until_valid
+from string_utils import prompt_until_valid
 from constants import DATABASE_URL, ACCOUNT_NUM_LEN
 
 
@@ -78,8 +79,10 @@ class ManagerTerminal:
                 report_manager.generate_eft_data()
             elif choice == "6":
                 print("Exiting... Goodbye!")
+                return
             else:
                 print("Error occurred. Exiting...")
+                sys.exit()
 
     def run(self):
             self.main_menu()

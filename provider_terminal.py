@@ -1,8 +1,9 @@
+import sys
 from database_manager import DatabaseManager
 from person_manager import (MemberManager, ProviderManager)
 from record_manager import RecordManager
 from service_manager import ServiceManager
-from utils import prompt_until_valid
+from string_utils import prompt_until_valid
 from constants import (
     DATABASE_URL, ACCOUNT_NUM_LEN, SERVICE_CODE_LEN
 )
@@ -66,6 +67,7 @@ class ProviderTerminal:
                 return
             else:  # catch all
                 print("Error occurred. Exiting...")
+                sys.exit()
 
     def run(self):
         provider_number = prompt_until_valid(

@@ -34,12 +34,17 @@ class ReportManager:
             )
             with open(report_filename, 'w') as file:
                 file.write(
-                    f"Member name: {member.name}\n"
-                    f"Member number: {member.id:09}\n"
-                    f"Member street address: {member.street_address}\n"
-                    f"Member city: {member.city}\n"
-                    f"Member state: {member.state}\n"
-                    f"Member ZIP code: {member.zip_code}\n\n"
+                    "╔═════════════════════════════════════════════════════╗\n"
+                    "║                Chocoholics Anonymous                ║\n"
+                    "╚═════════════════════════════════════════════════════╝\n"
+                    "Member Weekly Report\n\n"
+                    "Member Information:\n"
+                    f"  Name:     {member.name}\n"
+                    f"  Number:   {member.id:09}\n"
+                    f"  Street:   {member.street_address}\n"
+                    f"  City:     {member.city}\n"
+                    f"  State:    {member.state}\n"
+                    f"  ZIP Code: {member.zip_code}\n\n"
                 )
 
                 file.write("Services:\n")
@@ -78,9 +83,9 @@ class ReportManager:
             )
             with open(report_filename, 'w') as file:
                 file.write(
-                    "╔════════════════════════════════╗\n"
-                    "║ Chocoholics Anonymous (ChocAn) ║\n"
-                    "╚════════════════════════════════╝\n"
+                    "╔═════════════════════════════════════════════════════╗\n"
+                    "║                Chocoholics Anonymous                ║\n"
+                    "╚═════════════════════════════════════════════════════╝\n"
                     "Provider Weekly Report\n\n"
                     # f"WEEK OF: {one_week_ago.strftime('%m-%d-%Y')}\n\n"
                     "Provider Information:\n"
@@ -130,9 +135,9 @@ class ReportManager:
             report_filename = f"Manager_Summary_{datetime.now().strftime('%Y%m%d')}.txt"
             with open(report_filename, 'w') as file:
                 file.write(
-                    "╔════════════════════════════════╗\n"
-                    "║ Chocoholics Anonymous (ChocAn) ║\n"
-                    "╚════════════════════════════════╝\n"
+                    "╔═════════════════════════════════════════════════════╗\n"
+                    "║                Chocoholics Anonymous                ║\n"
+                    "╚═════════════════════════════════════════════════════╝\n"
                     "Accounts Payable Weekly Summary Report\n"
                     f"WEEK OF: {one_week_ago.strftime('%m-%d-%Y')}\n\n"
                     "────────────┬────────────────────────────┬───────┬────────────\n"

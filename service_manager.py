@@ -1,6 +1,6 @@
 from database_manager import DatabaseManager
 from models import Service
-# from constants import SERVICE_CODE_LENGTH
+from constants import SERVICE_CODE_LEN
 
 class ServiceManager:
     def __init__(self, db_manager: DatabaseManager):
@@ -10,12 +10,12 @@ class ServiceManager:
         with self.db_manager.get_session() as session:
             new_service = Service(name=name, fee=fee)
             session.add(new_service)
-            print(f"\nAdded service: {name} with code {new_service.id}")
+            print(f"\nAdded service: {name} with code {new_service.id:0{SERVICE_CODE_LEN}}")
 
     def update_service(self, service_code, **kwargs):
         service_id = int(service_code)
         with self.db_manager.get_session() as session:
-            service = session.query(Service).filter_by(code=service_code).first()
+            service = session.query(Service).filter_by(id=service_id).first()
         
             if not service:
                 print(f"\nService with code {service_code} not found.")
@@ -33,7 +33,7 @@ class ServiceManager:
             service = session.query(Service).filter_by(id=service_id).first()
 
             if not service:
-                print(f"\nService with code {service_id:06} not found.")
+                print(f"\nService with code {service_code} not found.")
                 return
 
             session.delete(service)

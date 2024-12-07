@@ -25,6 +25,6 @@ class DatabaseManager:
             session.commit()  # Commit changes
         except Exception as e:
             session.rollback()  # Rollback on error
-            raise f"Error: {e}"
+            raise e
         finally:
             session.close()  # Always close the session
