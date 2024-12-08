@@ -3,16 +3,16 @@ from database_manager import DatabaseManager
 from datetime import datetime
 
 
-class RecordManager:
-    def __init__(self, db_manager: DatabaseManager):
-        self.db_manager = db_manager
+class ServiceRecordManager:
+    def __init__(self, db_manager=None):
+        self.db_manager = (db_manager or DatabaseManager())
 
-    def record_service(self, provider_number, member_number, service_code, date_of_service, comments=None):
+    def add_service_record(self, provider_number, member_number, service_code, date_of_service, comments=None):
         provider_id = int(provider_number)
         member_id = int(member_number)
         service_id = int(service_code)
 
-        with self.db_manager.get_session() as session:
+        with self.db_manager.get_session(commit=True) as session:
             provider = session.query(Provider).filter_by(id=provider_id).first()
             member = session.query(Member).filter_by(id=member_id).first()
             service = session.query(Service).filter_by(id=service_id).first()

@@ -4,11 +4,11 @@ from models import Member, Provider
 
 # The base class for managing ChocAn persons (members and providers)
 class PersonManager:
-    def __init__(self, db_manager: DatabaseManager):
-        self.db_manager = db_manager
+    def __init__(self, db_manager=None):
+        self.db_manager = (db_manager or DatabaseManager())
 
     def add_person(self, person_class, name, street_address, city, state, zip_code):
-        with self.db_manager.get_session() as session:
+        with self.db_manager.get_session(commit=True) as session:
             new_person = person_class(
                 name=name, 
                 street_address=street_address, 
@@ -21,7 +21,7 @@ class PersonManager:
 
     def update_person(self, person_class, person_number, **kwargs):
         person_id = int(person_number)  # converting to int strips leading zeroes
-        with self.db_manager.get_session() as session:
+        with self.db_manager.get_session(commit=True) as session:
             person = session.query(person_class).filter_by(
                 id=person_id
             ).first()
@@ -37,7 +37,7 @@ class PersonManager:
 
     def delete_person(self, person_class, person_number):
         person_id = int(person_number)  # converting to int strips leading zeroes
-        with self.db_manager.get_session() as session:
+        with self.db_manager.get_session(commit=True) as session:
             person = session.query(person_class).filter_by(
                 id=person_id
             ).first()
@@ -86,7 +86,7 @@ class MemberManager(PersonManager):
     def is_valid_member(self, member_number) -> bool:
         if (super().is_valid(Member, member_number) is True):
             member_id = int(member_number)
-            with self.db_manager.get_session() as session:
+            with self.db_manager.get_session(commit=True) as session:
                 member = session.query(Member).filter_by(id=member_id).first()
                 if member.is_valid:
                     print ("\n🟢 Validated")

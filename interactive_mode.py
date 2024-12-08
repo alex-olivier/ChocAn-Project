@@ -82,10 +82,10 @@ class InteractiveMode:
         elif choice == "4":
             print("\nExiting... Goodbye!")
             # return
-            sys.exit()
+            sys.exit(0)
         else: # Catch all
             print("\nError occurred. Exiting...")
-            sys.exit()
+            sys.exit(1)
 
     def member_management(self):
         member_manager = MemberManager(self.db_manager)
@@ -186,7 +186,7 @@ class InteractiveMode:
                 return
             else: # Catch all
                 print("\nError occurred. Exiting...")
-                sys.exit()
+                sys.exit(1)
 
     def provider_management(self):
         provider_manager = ProviderManager(self.db_manager)
@@ -281,7 +281,7 @@ class InteractiveMode:
             return
         else: # Catch all
             print("\nError occurred. Exiting...")
-            sys.exit()
+            sys.exit(1)
 
     def service_management(self):
         service_manager = ServiceManager(self.db_manager)
@@ -352,7 +352,7 @@ class InteractiveMode:
             return
         else: # Catch all
             print("\nError occurred. Exiting...")
-            sys.exit()
+            sys.exit(1)
 
     def run(self):
         while True:

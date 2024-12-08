@@ -2,33 +2,32 @@ from interactive_mode import InteractiveMode
 from manager_terminal import ManagerTerminal
 from provider_terminal import ProviderTerminal
 from string_utils import prompt_until_valid
-
+import sys
 
 def main_menu():
         print("\n"
               "------------------------------")
         print("Main Menu")
         print("------------------------------")
-        print("  1. Interactive Mode")
+        print("  1. Provider Terminal")
         print("  2. Manager Terminal")
-        print("  3. Provider Terminal")
-        print("  4. Exit")
+        print("  3. Exit")
 
         choice = prompt_until_valid(
-            r'^[1-4]$',
+            r'^[1-3]$',
             "\n>> Enter your choice: ",
             "Invalid choice. Please try again."
         )
-        if choice == "1":
-            InteractiveMode().run()
-        elif choice == "2":
-            ManagerTerminal().run()
-        elif choice == "3":
+        if choice == "1":  # Provider Terminal
             ProviderTerminal().run()
-        elif choice == "4":
+        elif choice == "3":  # Manager Terminal
+            ManagerTerminal().run()
+        elif choice == "4":  # Exit
             print("\nExiting... Goodbye!")
+            sys.exit(0)
         else:
             print("\nError occurred. Exiting...")
+            sys.exit(1)
 
 if __name__ == "__main__":
     main_menu()

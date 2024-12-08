@@ -1,7 +1,7 @@
 import sys
 from database_manager import DatabaseManager
 from person_manager import (MemberManager, ProviderManager)
-from record_manager import RecordManager
+from service_record_manager import ServiceRecordManager
 from service_manager import ServiceManager
 from string_utils import prompt_until_valid
 from constants import (
@@ -54,7 +54,7 @@ class ProviderTerminal:
                     "Date must be in the format MM-DD-YYYY."
                 )
                 comments = input(">> Enter comments (optional): ")
-                RecordManager(self.db_manager).record_service(
+                ServiceRecordManager(self.db_manager).add_service_record(
                     provider_number, 
                     member_number, 
                     service_code, 
@@ -68,7 +68,7 @@ class ProviderTerminal:
                 return
             else:  # catch all
                 print("Error occurred. Exiting...")
-                sys.exit()
+                sys.exit(1)
 
     def run(self):
         provider_number = prompt_until_valid(

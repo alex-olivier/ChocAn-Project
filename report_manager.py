@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 
 
 class ReportManager:
-    def __init__(self, db_manager: DatabaseManager):
-        self.db_manager = db_manager
+    def __init__(self, db_manager=None):
+        self.db_manager = (db_manager or DatabaseManager())
 
     # Generates weekly member report
     def generate_member_report(self, member_number):

@@ -1,4 +1,5 @@
 import sys
+from interactive_mode import InteractiveMode
 from database_manager import DatabaseManager
 from report_manager import ReportManager
 from service_manager import ServiceManager
@@ -16,23 +17,26 @@ class ManagerTerminal:
             # print("---------------------------------------------------")
             # print("Manager Terminal:")
             print("\nManager Terminal:")
-            print("  1. Report Management")
-            print("  2. Generate Provider Directory")
-            print("  3. Exit")
+            print("  1. Interactive Mode")
+            print("  2. Report Management")
+            print("  3. Generate Provider Directory")
+            print("  4. Exit")
 
             choice = prompt_until_valid(
                 r'^[1-4]$',
                 "\n>> Enter your choice: ",
                 "Invalid choice. Please try again."
             )
-            if choice == "1":  # Report Management
+            if choice == "1":  # Interactive Mode
+                 InteractiveMode().run()
+            elif choice == "2":  # Report Management
                 self.report_management()
-            elif choice == "2":  # Generate Provider Directory
+            elif choice == "3":  # Generate Provider Directory
                 ServiceManager().view_services
                 pass
-            elif choice == "3":
+            elif choice == "4":
                 print("Exiting... Goodbye!")
-            else:
+            else: # Catch all
                 print("Error occurred. Exiting...")
 
     def report_management(self):
@@ -84,7 +88,7 @@ class ManagerTerminal:
                 return
             else:
                 print("Error occurred. Exiting...")
-                sys.exit()
+                sys.exit(1)
 
     def run(self):
             self.main_menu()

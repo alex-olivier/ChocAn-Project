@@ -3,18 +3,18 @@ from models import Service
 from constants import SERVICE_CODE_LEN
 
 class ServiceManager:
-    def __init__(self, db_manager: DatabaseManager):
-        self.db_manager = db_manager
+    def __init__(self, db_manager=None):
+        self.db_manager = (db_manager or DatabaseManager())
 
     def add_service(self, name, fee):
-        with self.db_manager.get_session() as session:
+        with self.db_manager.get_session(commit=True) as session:
             new_service = Service(name=name, fee=fee)
             session.add(new_service)
             print(f"\nAdded service.")
 
     def update_service(self, service_code, **kwargs):
         service_id = int(service_code)
-        with self.db_manager.get_session() as session:
+        with self.db_manager.get_session(commit=True) as session:
             service = session.query(Service).filter_by(id=service_id).first()
         
             if not service:
@@ -29,7 +29,7 @@ class ServiceManager:
 
     def delete_service(self, service_code):
         service_id = int(service_code)
-        with self.db_manager.get_session() as session:
+        with self.db_manager.get_session(commit=True) as session:
             service = session.query(Service).filter_by(id=service_id).first()
 
             if not service:
