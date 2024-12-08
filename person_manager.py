@@ -89,13 +89,13 @@ class MemberManager(PersonManager):
             with self.db_manager.get_session() as session:
                 member = session.query(Member).filter_by(id=member_id).first()
                 if member.is_valid:
-                    print ("\nValidated")
+                    print ("\n🟢 Validated")
                     return True
                 else:
-                    print ("\nMember Suspended")
+                    print ("\n🔴 Member Suspended")
                     return False        
         else:
-            print("\nInvalid Number")
+            print("\n⚠ Invalid Number")
             return False
 
 # Handles the management of ChocAn providers

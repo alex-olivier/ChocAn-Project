@@ -5,7 +5,9 @@ from string_utils import prompt_until_valid
 
 
 def main_menu():
-        print("\nMain Menu")
+        print("\n"
+              "------------------------------")
+        print("Main Menu")
         print("------------------------------")
         print("  1. Interactive Mode")
         print("  2. Manager Terminal")
