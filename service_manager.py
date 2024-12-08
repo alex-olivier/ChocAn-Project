@@ -1,6 +1,5 @@
 from database_manager import DatabaseManager
 from models import Service
-from constants import SERVICE_CODE_LEN
 
 class ServiceManager:
     def __init__(self, db_manager=None):
@@ -46,4 +45,4 @@ class ServiceManager:
                 print("\nNo services found.")
             else:
                 for service in services:
-                    print(f"{service.id:06}: {service.name} - ${service.fee:.2f}")
+                    print(f"  {service.id:06}: {service.name:<20} - ${service.fee:6.2f}")

@@ -1,6 +1,6 @@
 import sys
 from database_manager import DatabaseManager
-from person_manager import (MemberManager, ProviderManager)
+from person_manager import MemberManager, ProviderManager
 from service_record_manager import ServiceRecordManager
 from service_manager import ServiceManager
 from string_utils import prompt_until_valid
@@ -12,15 +12,15 @@ from constants import (
 class ProviderTerminal:
     def __init__(self, db_url=None):
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
+        self.provider_manager = ProviderManager(self.db_manager)
+        self.person_manager = MemberManager(self.db_manager)
+        self.service_record_manager = ServiceRecordManager(self.db_manager)
+        self.service_manager = ServiceManager(self.db_manager)
 
     def main_menu(self, provider_number):
-            # print("\n---------------------------------------------------")
-            # print("Provider Terminal")
-            # print("---------------------------------------------------")
-            # print("Provider Terminal:")
             print("\nProvider Terminal:")
             print("  1. Validate Member")
-            print("  2. Record Service")
+            print("  2. Create Service Record")
             print("  3. View Provider Directory")
             print("  4. Exit")
 
@@ -35,14 +35,14 @@ class ProviderTerminal:
                     ">> Enter member number to delete: ",
                     "Member number must be 9 digits."
                 )
-                MemberManager(self.db_manager).is_valid_member(member_number)
+                self.member_manager.is_valid_member(member_number)
             elif choice == "2":
                 member_number = prompt_until_valid(
                     rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
                     ">> Enter member number: ",
                     "Member number must be 9 digits."
                 )
-                MemberManager(self.db_manager).is_valid_member(member_number)
+                self.member_manager.is_valid_member(member_number)
                 service_code = prompt_until_valid(
                     rf'^\d{{{SERVICE_CODE_LEN}}}$',
                     ">> Enter service code: ",
@@ -54,7 +54,7 @@ class ProviderTerminal:
                     "Date must be in the format MM-DD-YYYY."
                 )
                 comments = input(">> Enter comments (optional): ")
-                ServiceRecordManager(self.db_manager).add_service_record(
+                self.service_record_manager.add_service_record(
                     provider_number, 
                     member_number, 
                     service_code, 
@@ -76,7 +76,7 @@ class ProviderTerminal:
             ">> Enter provider number: ",
             "Provider number must be 9 digits."
         )
-        if ProviderManager(self.db_manager).is_valid_provider(provider_number):
+        if self.provider_manager.is_valid_provider(provider_number):
             while True:
                 self.main_menu(provider_number)
                 break

@@ -10,12 +10,11 @@ from constants import DATABASE_URL, ACCOUNT_NUM_LEN
 class ManagerTerminal:
     def __init__(self, db_url=None):
         self.db_manager = DatabaseManager(db_url or DATABASE_URL)
+        self.report_manager = ReportManager(self.db_manager)
+        self.interactive_mode = InteractiveMode(self.db_manager)
+        self.service_manager = ServiceManager(self.db_manager)
 
     def main_menu(self):
-            # print("\n---------------------------------------------------")
-            # print("Manager Terminal")
-            # print("---------------------------------------------------")
-            # print("Manager Terminal:")
             print("\nManager Terminal:")
             print("  1. Interactive Mode")
             print("  2. Report Management")
@@ -28,11 +27,11 @@ class ManagerTerminal:
                 "Invalid choice. Please try again."
             )
             if choice == "1":  # Interactive Mode
-                 InteractiveMode().run()
+                 self.interactive_mode.run()
             elif choice == "2":  # Report Management
                 self.report_management()
             elif choice == "3":  # Generate Provider Directory
-                ServiceManager().view_services
+                self.service_manager.view_services()
                 pass
             elif choice == "4":
                 print("Exiting... Goodbye!")
@@ -40,14 +39,9 @@ class ManagerTerminal:
                 print("Error occurred. Exiting...")
 
     def report_management(self):
-            report_manager = ReportManager(self.db_manager)
-            # print("\n---------------------------------------------------")
-            # print("Manager Terminal > Report Management")
-            # print("---------------------------------------------------")
-            # print("Manager Terminal:")
             print("\nManager Terminal:")
             print("  Report Management:")
-            print("    1. Main Accounting Procedure")
+            print("    1. Main accounting procedure")
             print("    2. Generate Summary Report")
             print("    3. Generate Member Report")
             print("    4. Generate Provider Report")
@@ -61,10 +55,10 @@ class ManagerTerminal:
             )
             if choice == "1":  # Main Accounting Procedure
                 print("\nRunning main acccounting procedure...")
-                report_manager.main_accounting_procedure()
+                self.report_manager.main_accounting_procedure()
             elif choice == "2":  # Generate Summary Report
                 print("\nGenerating summary report...")
-                report_manager.generate_summary_report()
+                self.report_manager.generate_summary_report()
             elif choice == "3":  # Gemerate Member Report
                 print("\nGenerating member report...")
                 member_number = prompt_until_valid(
@@ -72,7 +66,7 @@ class ManagerTerminal:
                     "\n>> Enter member number: ",
                     "Member number must be 9 digits."
                 )
-                report_manager.generate_member_report(member_number)
+                self.report_manager.generate_member_report(member_number)
             elif choice == "4":  # Generate Provider Report
                 print("\nGenerating provider report...")
                 provider_number = prompt_until_valid(
@@ -80,9 +74,9 @@ class ManagerTerminal:
                     "\n>> Enter provider number: ",
                     "Provider number must be 9 digits."
                 )
-                report_manager.generate_provider_report(provider_number)
+                self.report_manager.generate_provider_report(provider_number)
             elif choice == "5":  # Generate EFT Data
-                report_manager.generate_eft_data()
+                self.report_manager.generate_eft_data()
             elif choice == "6":
                 print("Exiting... Goodbye!")
                 return

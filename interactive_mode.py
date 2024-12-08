@@ -11,8 +11,11 @@ from constants import (
 
 
 class InteractiveMode:
-    def __init__(self, db_url=None):
-        self.db_manager = DatabaseManager(db_url or DATABASE_URL)
+    def __init__(self, db_manager=None):
+        self.db_manager = (db_manager or DatabaseManager())
+        self.member_manager = MemberManager(self.db_manager)
+        self.provider_manager = ProviderManager(self.db_manager)
+        self.service_manager = ServiceManager(self.db_manager)
 
     # Prompt ChocAn manager/operator for the details of a new member or provider
     def prompt_person_details(self) -> tuple:
@@ -57,16 +60,13 @@ class InteractiveMode:
         )
         return name, float(fee)
 
-    def main_menu(self):
-        # print("\n---------------------------------------------------")
-        # print("Interactive Mode")
-        # print("---------------------------------------------------")
-        # print("Interactive Mode:")
-        print("\nInteractive Mode:")
-        print("  1. Member Management")
-        print("  2. Provider Management")
-        print("  3. Service Management")
-        print("  4. Exit")
+    def menu(self):
+        print("\nManager Terminal:")
+        print("  Interactive Mode:")
+        print("    1. Member Management")
+        print("    2. Provider Management")
+        print("    3. Service Management")
+        print("    4. Exit")
         
         choice = prompt_until_valid(
             r'^[1-4]$',
@@ -74,11 +74,11 @@ class InteractiveMode:
             "Invalid choice. Please try again."
         )
         if choice == "1":
-            self.member_management()
+            self.member_management_menu()
         elif choice == "2": 
-            self.provider_management()
+            self.provider_management_menu()
         elif choice == "3":
-            self.service_management()
+            self.service_management_menu()
         elif choice == "4":
             print("\nExiting... Goodbye!")
             # return
@@ -87,20 +87,16 @@ class InteractiveMode:
             print("\nError occurred. Exiting...")
             sys.exit(1)
 
-    def member_management(self):
-        member_manager = MemberManager(self.db_manager)
+    def member_management_menu(self):
         while True:
-            # print("\n---------------------------------------------------")
-            # print("Interactive Mode > Member Management")
-            # print("---------------------------------------------------")
-            # print("Interactive Mode:")
-            print("\nInteractive Mode:")
-            print("  Member Management:")
-            print("    1. Add Member")
-            print("    2. Update Member")
-            print("    3. Delete Member")
-            print("    4. View Members")
-            print("    5. Exit")
+            print("\nManager Terminal:")
+            print("  Interactive Mode:")
+            print("    Member Management:")
+            print("      1. Add Member")
+            print("      2. Update Member")
+            print("      3. Delete Member")
+            print("      4. View Members")
+            print("      5. Exit")
             
             choice = prompt_until_valid(
                 r'^[1-5]$',
@@ -110,7 +106,7 @@ class InteractiveMode:
             if choice == "1":  # Add a member
                 print("\nEnter member details")
                 name, street_address, city, state, zip_code = self.prompt_person_details()
-                member_manager.add_member(name, street_address, city, state, zip_code)
+                self.member_manager.add_member(name, street_address, city, state, zip_code)
             elif choice == "2": # Update a member
                 member_number = prompt_until_valid(
                     rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
@@ -170,17 +166,17 @@ class InteractiveMode:
                     # print("")
                     # new_status = 
                     # kwargs = {"status": new_status}
-                member_manager.update_member(member_number, **kwargs)
+                self.member_manager.update_member(member_number, **kwargs)
             elif choice == "3":  # Delete a member
                 member_number = prompt_until_valid(
                     rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
                     "\n>> Enter member number to delete: ",
                     "Member number must be 9 digits."
                 )
-                member_manager.delete_member(member_number)
+                self.member_manager.delete_member(member_number)
             elif choice == "4":  # View Members
                 
-                member_manager.view_members()
+                self.member_manager.view_members()
             elif choice == "5":
                 print("\nExiting... Goodbye!")
                 return
@@ -188,19 +184,15 @@ class InteractiveMode:
                 print("\nError occurred. Exiting...")
                 sys.exit(1)
 
-    def provider_management(self):
-        provider_manager = ProviderManager(self.db_manager)
-        # print("\n---------------------------------------------------")
-        # print("Interactive Mode > Provider Management")
-        # print("---------------------------------------------------")
-        # print("Interactive Mode:")
-        print("\nInteractive Mode:")
-        print("  Provider Management:")
-        print("    1. Add Provider")
-        print("    2. Update Provider")
-        print("    3. Delete Provider")
-        print("    4. View Providers")
-        print("    5. Exit")
+    def provider_management_menu(self):
+        print("\nManager Terminal:")
+        print("  Interactive Mode:")
+        print("    Provider Management:")
+        print("      1. Add Provider")
+        print("      2. Update Provider")
+        print("      3. Delete Provider")
+        print("      4. View Providers")
+        print("      5. Exit")
     
         choice = prompt_until_valid(
             r'^[1-5]$',
@@ -210,22 +202,19 @@ class InteractiveMode:
         if choice == "1":  # Add a provider
             print("\nEnter provider details")
             name, street_address, city, state, zip_code = self.prompt_person_details()
-            provider_manager.add_provider(name, street_address, city, state, zip_code)
+            self.provider_manager.add_provider(name, street_address, city, state, zip_code)
         elif choice == "2": # Update a provider
             provider_number = prompt_until_valid(
                 rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
                 ">> Enter provider number to update: ",
                 "Provider number must be 9 digits."
             )
-
-             # Prompt the user to select the field to update
             print("\nSelect the provider field to update:")
             print("  1. Name")
             print("  2. Street Address")
             print("  3. City")
             print("  4. State")
             print("  5. ZIP Code")
-
             field_choice = prompt_until_valid(
                 r'^[1-5]$',
                 "\n>> Enter your choice: ",
@@ -266,16 +255,16 @@ class InteractiveMode:
                     f"  ZIP Code must include {ZIP_CODE_LEN} digits."
                 )
                 kwargs = {"zip_code": new_zip_code}
-            provider_manager.update_provider(provider_number, **kwargs)
+            self.provider_manager.update_provider(provider_number, **kwargs)
         elif choice == "3":  # Delete a provider
             provider_number = prompt_until_valid(
                 rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
                 "\nEnter provider number to delete: ",
                 "Provider number must be 9 digits."
             )
-            provider_manager.delete_provider(provider_number)
+            self.provider_manager.delete_provider(provider_number)
         elif choice == "4":  # View Providers
-            provider_manager.view_providers()
+            self.provider_manager.view_providers()
         elif choice == "5":
             print("\nExiting... Goodbye!")
             return
@@ -283,20 +272,15 @@ class InteractiveMode:
             print("\nError occurred. Exiting...")
             sys.exit(1)
 
-    def service_management(self):
-        service_manager = ServiceManager(self.db_manager)
-        # print("\n---------------------------------------------------")
-        # print("Interactive Mode > Service Management")
-        # print("---------------------------------------------------")
-        # print("Interactive Mode:")
-        print("\nInteractive Mode:")
-        print("  Service Management:")
-        print("    1. Add Service")
-        print("    2. Update Service")
-        print("    3. Delete Service")
-        print("    4. View Services")
-        print("    5. Exit")
-
+    def service_management_menu(self):
+        print("\nManager Terminal:")
+        print("  Interactive Mode:")
+        print("    Service Management:")
+        print("      1. Add Service")
+        print("      2. Update Service")
+        print("      3. Delete Service")
+        print("      4. View Services")
+        print("      5. Exit")
         choice = prompt_until_valid(
             r'^[1-5]$',
             "\n>> Enter your choice: ",
@@ -304,19 +288,17 @@ class InteractiveMode:
         )
         if choice == "1":  # Add a service
             name, fee = self.prompt_service_details()
-            service_manager.add_service(name, fee)
+            self.service_manager.add_service(name, fee)
         elif choice == "2":  # Update Service
             choice = prompt_until_valid(
                 rf'^\d{{{SERVICE_CODE_LEN}}}$',
                 ">> Enter service code to update: ",
                 "Service code must be 6 digits."
             )
-
-            # Prompt the user to select the field to update
+        
             print("\nSelect the service field to update:")
             print("  1. Name")
-            print("  2. Fee")
-            
+            print("  2. Fee")  
             field_choice = prompt_until_valid(
                 r'^[1-2]$',
                 "\n>> Enter your choice: ",
@@ -336,17 +318,17 @@ class InteractiveMode:
                     f"Service Fee cannot exceed ${SERVICE_FEE_MAX})."
                 )
                 kwargs = {"fee": new_fee}
-
-            service_manager.update_service(service_code)
+            self.service_manager.update_service(service_code)
         elif choice == "3":  # Delete Service
             service_code = prompt_until_valid(
                 rf'^\d{{{SERVICE_CODE_LEN}}}$',
                 "\n>> Enter service code to delete: ",
                 "Service code must be 6 digits."
             )
-            service_manager.delete_service(service_code)
+            self.service_manager.delete_service(service_code)
         elif choice == "4":  # View Services
-            service_manager.view_services()
+            print("\nServices:")
+            self.service_manager.view_services()
         elif choice == "5":
             print("\nExiting... Goodbye!")
             return
@@ -356,5 +338,5 @@ class InteractiveMode:
 
     def run(self):
         while True:
-            self.main_menu()
+            self.menu()
         

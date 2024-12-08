@@ -3,10 +3,10 @@ from manager_terminal import ManagerTerminal
 from provider_terminal import ProviderTerminal
 from string_utils import prompt_until_valid
 import sys
+from constants import DATABASE_URL
 
-def main_menu():
-        print("\n"
-              "------------------------------")
+def main_menu(provider_terminal: ProviderTerminal, manager_terminal: ManagerTerminal):
+        print("\n------------------------------")
         print("Main Menu")
         print("------------------------------")
         print("  1. Provider Terminal")
@@ -19,18 +19,20 @@ def main_menu():
             "Invalid choice. Please try again."
         )
         if choice == "1":  # Provider Terminal
-            ProviderTerminal().run()
-        elif choice == "3":  # Manager Terminal
-            ManagerTerminal().run()
-        elif choice == "4":  # Exit
+            provider_terminal.run()
+        elif choice == "2":  # Manager Terminal
+            manager_terminal.run()
+        elif choice == "3":  # Exit
             print("\nExiting... Goodbye!")
             sys.exit(0)
-        else:
+        else:  # Catch all
             print("\nError occurred. Exiting...")
             sys.exit(1)
 
 if __name__ == "__main__":
-    main_menu()
+    provider_terminal = ProviderTerminal(DATABASE_URL)
+    manager_terminal = ManagerTerminal(DATABASE_URL)
+    main_menu(provider_terminal, manager_terminal)
 
 
 

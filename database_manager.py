@@ -19,7 +19,8 @@ class DatabaseManager:
         """
         self.engine = create_engine(db_url or DATABASE_URL)
         Base.metadata.create_all(self.engine)
-        self.Session = sessionmaker(bind=self.engine)
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        # self.Session = sessionmaker(bind=self.engine)
 
     @contextmanager
     def get_session(self, commit=False):
