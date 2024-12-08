@@ -21,7 +21,7 @@ class Member(Base):
     city = Column(String(CITY_MAX_LEN), nullable=False)
     state = Column(String(STATE_LEN), nullable=False)
     zip_code = Column(String(ZIP_CODE_LEN), nullable=False)
-    status = Column(Boolean, nullable=False, default=MEMBER_STATUS_ACTIVE)
+    status = Column(Boolean, nullable=False)
 
     service_records = relationship('ServiceRecord', back_populates='member')
 
@@ -46,14 +46,14 @@ class Member(Base):
             f"status={self.status!r})"
         )
 
-    def __init__(self, name, street_address, city, state, zip_code):
+    def __init__(self, name, street_address, city, state, zip_code, status=None):
         self.name = name
         self.street_address = street_address
         self.city = city
         self.state = state
         self.zip_code = zip_code
-        self.status = MEMBER_STATUS_ACTIVE  # Explicitly set status to STATUS_ACTIVE
-
+        self.status = (status or MEMBER_STATUS_ACTIVE)
+    
 
 class Provider(Base):
     __tablename__ = 'providers'

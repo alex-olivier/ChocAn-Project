@@ -8,6 +8,9 @@ from sqlalchemy import func
 class ReportManager:
     def __init__(self, db_manager=None):
         self.db_manager = (db_manager or DatabaseManager())
+        self.reports_dir = os.path.join(os.path.dirname(__file__), "reports")
+        os.makedirs(self.reports_dir, exist_ok=True)
+
 
     # Generates weekly member report
     def generate_member_report(self, member_number):
@@ -27,7 +30,8 @@ class ReportManager:
                 # print("\nNo services recorded for this member.")
                 return
 
-            report_filename = (
+            report_filename = os.path.join(
+                self.reports_dir,
                 f"{member.name.replace(' ', '_')}_"
                 f"{datetime.now().strftime('%Y%m%d')}_"
                 "MemberReport.txt"
@@ -76,7 +80,8 @@ class ReportManager:
                 # print("No services recorded for this provider in the past week.")
                 return
 
-            report_filename = (
+            report_filename = os.path.join(
+                self.reports_dir,
                 f"{provider.name.replace(' ', '_')}_"
                 f"{datetime.now().strftime('%Y%m%d')}_"
                 "ProviderReport.txt"
@@ -132,8 +137,10 @@ class ReportManager:
             total_consultations = 0
             total_fees = 0
         
-            report_filename = ("Manager_Summary_"
-                               f"{datetime.now().strftime('%Y%m%d')}.txt"
+            report_filename = os.path.join(
+                self.reports_dir,
+                "Manager_Summary_"
+                f"{datetime.now().strftime('%Y%m%d')}.txt"
             )
             with open(report_filename, 'w') as file:
                 file.write(
