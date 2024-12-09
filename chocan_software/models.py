@@ -52,24 +52,37 @@ class Member(Base):
         UniqueConstraint('name', 'street_address', 'city', 'state', 'zip_code', name='unique_member'),
     )
 
-    def __repr__(self) -> str:
-        return (
-            f"Member(number={self.id:09}, "
-            f"name={self.name!r}, "
-            f"street_address={self.street_address!r}, "
-            f"city={self.city!r}, "
-            f"state={self.state!r}, "
-            f"zip_code={self.zip_code!r}, "
-            f"status={self.status!r})"
-        )
-
     def __init__(self, name, street_address, city, state, zip_code, status=None):
+        """
+        Initializes a Member instance.
+        :param name: Name of the member.
+        :param street_address: Street address of the member.
+        :param city: City of the member.
+        :param state: State of the member.
+        :param zip_code: ZIP code of the member.
+        :param status: Membership status (active or inactive).
+        """
         self.name = name
         self.street_address = street_address
         self.city = city
         self.state = state
         self.zip_code = zip_code
         self.status = status if status is not None else MEMBER_STATUS_ACTIVE
+
+    def __repr__(self) -> str:
+        """
+        Provides a string representation of the Member instance.
+        :return: A string with member details.
+        """
+        return (
+            f"Member(id={self.id:09}, "
+            f"name={self.name!r}, "
+            f"street_address={self.street_address!r}, "
+            f"city={self.city!r}, "
+            f"state={self.state!r}, "
+            f"zip_code={self.zip_code!r}, "
+            f"status={self.status})"
+        )
     
 
 class Provider(Base):
@@ -94,22 +107,34 @@ class Provider(Base):
         UniqueConstraint('name', 'street_address', 'city', 'state', 'zip_code', name='unique_provider'),
     )
 
+    def __init__(self, name, street_address, city, state, zip_code):
+        """
+        Initializes a Provider instance.
+        :param name: Name of the provider.
+        :param street_address: Street address of the provider.
+        :param city: City of the provider.
+        :param state: State of the provider.
+        :param zip_code: ZIP code of the provider.
+        """
+        self.name = name
+        self.street_address = street_address
+        self.city = city
+        self.state = state
+        self.zip_code = zip_code
+
     def __repr__(self) -> str:
+        """
+        Provides a string representation of the Provider instance.
+        :return: A string with provider details.
+        """
         return (
-            f"Provider(number={self.id:09}, "
+            f"Provider(id={self.id:09}, "
             f"name={self.name!r}, "
             f"street_address={self.street_address!r}, "
             f"city={self.city!r}, "
             f"state={self.state!r}, "
             f"zip_code={self.zip_code!r})"
         )
-    
-    def __init__(self, name, street_address, city, state, zip_code):
-        self.name = name
-        self.street_address = street_address
-        self.city = city
-        self.state = state
-        self.zip_code = zip_code
 
 
 class Service(Base):
@@ -119,8 +144,8 @@ class Service(Base):
     name = Column(String(SERVICE_NAME_MAX_LEN), nullable=False)
     fee = Column(Float, nullable=False)
 
-    provider_services = relationship('ProviderService', back_populates='service')
     service_records = relationship('ServiceRecord', back_populates='service')
+    provider_services = relationship('ProviderService', back_populates='service')
     
     __table_args__ = (
         CheckConstraint(f"length(name) <= {SERVICE_NAME_MAX_LEN}", name="check_service_name_length"),
@@ -128,11 +153,24 @@ class Service(Base):
         UniqueConstraint('name', 'fee', name='unique_service'),
     )
     
+    def __init__(self, name, fee):
+        """
+        Initializes a Service instance.
+        :param name: Name of the service.
+        :param fee: Fee for the service.
+        """
+        self.name = name
+        self.fee = fee
+
     def __repr__(self) -> str:
+        """
+        Provides a string representation of the Service instance.
+        :return: A string with service details.
+        """
         return (
-            f"Service(code={self.id:06}, "
+            f"Service(id={self.id:06}, "
             f"name={self.name!r}, "
-            f"fee={self.fee!r})"
+            f"fee={self.fee})"
         )
 
 
@@ -145,6 +183,25 @@ class ProviderService(Base):
     provider = relationship('Provider', back_populates='provider_services')
     service = relationship('Service', back_populates='provider_services')
 
+    def __init__(self, provider_id, service_id):
+        """
+        Initializes a ProviderService instance.
+        :param provider_id: ID of the provider.
+        :param service_id: ID of the service.
+        """
+        self.provider_id = provider_id
+        self.service_id = service_id
+    
+    def __repr__(self) -> str:
+        """
+        Provides a string representation of the ProviderService instance.
+        :return: A string with provider and service IDs.
+        """
+        return (
+            f"ProviderService(provider_id={self.provider_id:09}, "
+            f"service_id={self.service_id:06})"
+        )
+
 
 class ServiceRecord(Base):
     __tablename__ = 'service_records'
@@ -156,6 +213,7 @@ class ServiceRecord(Base):
     service_date = Column(DateTime, nullable=False)  # Use DateTime for service_date
     timestamp = Column(DateTime, nullable=False, default=func.now())  # Automatically generate timestamp
     comments = Column(String(SERVICERECORD_COMMENT_MAX_LEN))
+    member = Column(Member, nullable=False)
 
     provider = relationship('Provider', back_populates='service_records')
     member = relationship('Member', back_populates='service_records')
@@ -167,12 +225,32 @@ class ServiceRecord(Base):
         UniqueConstraint('provider_id', 'member_id', 'service_id', 'service_date', name='unique_service_record'),
     )
 
+    def __init__(self, provider_id, member_id, service_id, service_date, comments=None):
+        """
+        Initializes a ServiceRecord instance.
+        :param provider_id: ID of the provider.
+        :param member_id: ID of the member.
+        :param service_id: ID of the service.
+        :param service_date: Date of the service.
+        :param comments: Optional comments on the service record.
+        """
+        self.provider_id = provider_id
+        self.member_id = member_id
+        self.service_id = service_id
+        self.service_date = service_date
+        self.comments = comments
+
     def __repr__(self) -> str:
+        """
+        Provides a string representation of the ServiceRecord instance.
+        :return: A string with key attributes of the service record.
+        """
         return (
-            f"ServiceRecord(provider_id={self.provider_id:09}, "
+            f"ServiceRecord(id={self.id}, "
+            f"provider_id={self.provider_id:09}, "
             f"member_id={self.member_id:09}, "
             f"service_id={self.service_id:06}, "
-            f"service_date={self.service_date!r}, "
-            f"timestamp={self.timestamp!r}, "
+            f"service_date={self.service_date}, "
+            f"timestamp={self.timestamp}, "
             f"comments={self.comments!r})"
         )

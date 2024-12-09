@@ -2,9 +2,16 @@ from abc import ABC
 from chocan_software.models import Member
 from chocan_software.models import Provider
 from chocan_software.data_managers.database_manager import DatabaseManager
+from chocan_software.constants import (
+    MEMBER_STATUS_ACTIVE,
+    MEMBER_STATUS_SUSPENDED
+)
 
 
 # The base class for managing ChocAn persons (members and providers)
+# NOTE: My Member and Provider models previously utilized polymorphism. I've since
+#       removed it to make it easier on myself, but this ABC is a vestigil
+#       structure from that if you were wondering ().
 class PersonManager(ABC):
     def __init__(self, db_manager=None):
         self.db_manager = db_manager if db_manager is not None else DatabaseManager()
@@ -59,13 +66,13 @@ class PersonManager(ABC):
                 for person in persons:
                     print(f"{person.name}, {person.id:09}")
 
-    def is_valid(self, person_class, person_number) -> bool:
-        person_id = int(person_number)  # converting to int strips leading zeroes
+    def is_valid(self, person_class, person_number):
+        person_id = int(person_number)  # int conversion to strip leading zeroes
         with self.db_manager.get_session() as session:
             person = session.query(person_class).filter_by(
                 id=person_id
             ).first()
-            return person is not None
+            return person if not None else None
 
 
 # Handles the management of ChocAn members
@@ -86,19 +93,17 @@ class MemberManager(PersonManager):
         super().view_persons(Member)
 
     def is_valid_member(self, member_number) -> bool:
-        if (super().is_valid(Member, member_number) is True):
-            member_id = int(member_number)
-            with self.db_manager.get_session(commit=True) as session:
-                member = session.query(Member).filter_by(id=member_id).first()
-                if member.status:
-                    print ("\nValidated")
-                    return True
-                else:
-                    print ("\nMember Suspended")
-                    return False        
+        member = super().is_valid(Member, member_number)
+        if member is not None:
+            # member_id = int(member_number)
+            # with self.db_manager.get_session(commit=True) as session:
+            #     member = session.query(Member).filter_by(id=member_id).first()
+            if member.status is MEMBER_STATUS_ACTIVE:
+                return True
+            elif member.status is MEMBER_STATUS_SUSPENDED:
+                return False        
         else:
-            print("\nInvalid Number")
-            return False
+            return None
 
 # Handles the management of ChocAn providers
 class ProviderManager(PersonManager):
