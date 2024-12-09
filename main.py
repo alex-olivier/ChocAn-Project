@@ -1,8 +1,9 @@
 import sys
-from chocan_software.manager_terminal import ManagerTerminal
-from chocan_software.provider_terminal import ProviderTerminal
+from chocan_software.user_terminals.manager_terminal import ManagerTerminal
+from chocan_software.user_terminals.provider_terminal import ProviderTerminal
 from chocan_software.string_utils import prompt_until_valid
 from chocan_software.constants import DATABASE_URL
+
 
 def main_menu(provider_terminal: ProviderTerminal, manager_terminal: ManagerTerminal):
         print("\n------------------------------")

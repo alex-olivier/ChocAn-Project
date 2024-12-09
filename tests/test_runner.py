@@ -42,7 +42,6 @@ def load_csv_to_table(csv_filename, model_class, session):
         session.add(record)
     session.commit()
 
-
 def test_load_members(test_database):
     session = test_database
     load_csv_to_table("members.csv", Member, session)

@@ -1,12 +1,23 @@
 import sys
-from chocan_software.database_manager import DatabaseManager
-from chocan_software.person_manager import MemberManager, ProviderManager
-from chocan_software.service_manager import ServiceManager
+from chocan_software.data_managers.database_manager import DatabaseManager
+from chocan_software.data_managers.person_manager import MemberManager
+from chocan_software.data_managers.person_manager import ProviderManager
+from chocan_software.data_managers.service_manager import ServiceManager
 from chocan_software.string_utils import prompt_until_valid
 from chocan_software.constants import (
-    DATABASE_URL, NAME_MIN_LEN, NAME_MAX_LEN, STREET_ADDRESS_MIN_LEN,
-    STREET_ADDRESS_MAX_LEN, CITY_MIN_LEN, CITY_MAX_LEN, STATE_LEN, ZIP_CODE_LEN,
-    ACCOUNT_NUM_LEN, SERVICE_CODE_LEN, SERVICE_NAME_MIN_LEN, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX
+    NAME_MIN_LEN,
+    NAME_MAX_LEN,
+    STREET_ADDRESS_MIN_LEN,
+    STREET_ADDRESS_MAX_LEN,
+    CITY_MIN_LEN,
+    CITY_MAX_LEN,
+    STATE_LEN,
+    ZIP_CODE_LEN,
+    ACCOUNT_NUM_LEN,
+    SERVICE_CODE_LEN,
+    SERVICE_NAME_MIN_LEN,
+    SERVICE_NAME_MAX_LEN,
+    SERVICE_FEE_MAX
 )
 
 
@@ -96,8 +107,7 @@ class InteractiveMode:
             print("      2. Update Member")
             print("      3. Delete Member")
             print("      4. View Members")
-            print("      5. Exit")
-            
+            print("      5. Exit")       
             choice = prompt_until_valid(
                 r'^[1-5]$',
                 "\n>> Enter a choice: ",
@@ -113,7 +123,6 @@ class InteractiveMode:
                     "\n>> Enter member number to update: ",
                     "Member number must be 9 digits."
                 )
-
                 print("\nSelect the member field to update:")
                 print("  1. Name")
                 print("  2. Street Address")
@@ -122,50 +131,55 @@ class InteractiveMode:
                 print("  5. ZIP Code")
                 print("  6. Membership Status")
                 field_choice = prompt_until_valid(
-                    r'^[1-5]$',
+                    r'^[1-6]$',
                     "\n>> Enter your choice: ",
                     "Invalid choice. Please try again."
                 )
-
-                if field_choice == "1":
+                if field_choice == "1": # Update member name
                     new_name = prompt_until_valid(
                         rf'^.{{{NAME_MIN_LEN},{NAME_MAX_LEN}}}$',
                         ">> New Name: ",
                         f"Name must be up to {NAME_MAX_LEN} characters."
                     )
                     kwargs = {"name": new_name}
-                elif field_choice == "2":
+                elif field_choice == "2": # Update member street address
                     new_street_address = prompt_until_valid(
                         rf'^.{{{STREET_ADDRESS_MIN_LEN},{STREET_ADDRESS_MAX_LEN}}}$',
                         ">> Street Address: ",
                         f"  Street Address must be up to {STREET_ADDRESS_MAX_LEN} characters."
                     )
                     kwargs = {"street_address": new_street_address}
-                elif field_choice == "3":
+                elif field_choice == "3": # Update member city
                     new_city = prompt_until_valid(
                         rf'^.{{{CITY_MIN_LEN},{CITY_MAX_LEN}}}$',
                         ">> City: ",
                         f"  City must be up to {CITY_MAX_LEN} characters."
                     )
                     kwargs = {"city": new_city}
-                elif field_choice == "4":
+                elif field_choice == "4": # Update member state
                     new_state = prompt_until_valid(
                         rf'^[A-Z]{{{STATE_LEN}}}$',
                         ">> State: ",
                         f"  State must include {STATE_LEN} uppercase letters."
                     )
                     kwargs = {"state": new_state}
-                elif field_choice == "5":
+                elif field_choice == "5": # Update member ZIP code
                     new_zip_code = prompt_until_valid(
                         rf'^\d{{{ZIP_CODE_LEN}}}$',
                         ">> ZIP Code: ",
                         f"  ZIP Code must include {ZIP_CODE_LEN} digits."
                     )
                     kwargs = {"zip_code": new_zip_code}
-                # elif field_choice == "6": # TODO: finish update to member status 
-                    # print("")
-                    # new_status = 
-                    # kwargs = {"status": new_status}
+                elif field_choice == "6": # Update member status
+                    print("\nSelect the new member status:")
+                    print("  0. Suspended")
+                    print("  1. Active")
+                    new_status = prompt_until_valid(
+                        rf'^[0-1]$',
+                        "\n>> Member Status: ",
+                        f"  Member status must be 0 or 1."
+                    ) 
+                    kwargs = {"status": int(new_status)}
                 self.member_manager.update_member(member_number, **kwargs)
             elif choice == "3":  # Delete a member
                 member_number = prompt_until_valid(
@@ -175,7 +189,6 @@ class InteractiveMode:
                 )
                 self.member_manager.delete_member(member_number)
             elif choice == "4":  # View Members
-                
                 self.member_manager.view_members()
             elif choice == "5":
                 print("\nExiting... Goodbye!")

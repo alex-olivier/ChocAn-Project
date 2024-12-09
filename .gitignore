@@ -8,3 +8,4 @@
 /_unused_code
 /*/__pycache__
 /*/.pytest_cache
+/*/*/__pycache__

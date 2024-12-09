@@ -1,14 +1,18 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 from sqlalchemy import func
-from chocan_software.database_manager import DatabaseManager
-from chocan_software.models import Member, Provider, Service, ServiceRecord
+from chocan_software.models import Member
+from chocan_software.models import Provider
+from chocan_software.models import Service
+from chocan_software.models import ServiceRecord
+from chocan_software.data_managers.database_manager import DatabaseManager
 
 
 class ReportManager:
     def __init__(self, db_manager=None):
         self.db_manager = db_manager if db_manager is not None else DatabaseManager()
-        self.reports_dir = os.path.join(os.path.dirname(__file__), "reports")
+        self.reports_dir = os.path.join(os.path.dirname(__file__), "../reports")
         os.makedirs(self.reports_dir, exist_ok=True)
 
 

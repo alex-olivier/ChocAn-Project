@@ -1,7 +1,3 @@
-# from sqlalchemy import (
-#     Column, Integer, String, Float, Boolean, CheckConstraint, UniqueConstraint, 
-#     ForeignKey, DateTime, func
-# )
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
@@ -15,8 +11,15 @@ from sqlalchemy import func
 from sqlalchemy.orm import DeclarativeBase 
 from sqlalchemy.orm import relationship
 from chocan_software.constants import (
-    NAME_MAX_LEN, STREET_ADDRESS_MAX_LEN, CITY_MAX_LEN, STATE_LEN, ZIP_CODE_LEN,
-    MEMBER_STATUS_ACTIVE, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX, SERVICERECORD_COMMENT_MAX_LEN
+    NAME_MAX_LEN, 
+    STREET_ADDRESS_MAX_LEN, 
+    CITY_MAX_LEN, 
+    STATE_LEN, 
+    ZIP_CODE_LEN,
+    MEMBER_STATUS_ACTIVE, 
+    SERVICE_NAME_MAX_LEN, 
+    SERVICE_FEE_MAX, 
+    SERVICERECORD_COMMENT_MAX_LEN
 )
 # This SQLAlchemy ORM syntax is now deprecated as of version 2.0
 # from sqlalchemy.ext.declarative import declarative_base  

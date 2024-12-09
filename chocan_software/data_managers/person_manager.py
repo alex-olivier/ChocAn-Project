@@ -1,9 +1,11 @@
-from chocan_software.database_manager import DatabaseManager
-from chocan_software.models import Member, Provider
+from abc import ABC
+from chocan_software.models import Member
+from chocan_software.models import Provider
+from chocan_software.data_managers.database_manager import DatabaseManager
 
 
 # The base class for managing ChocAn persons (members and providers)
-class PersonManager:
+class PersonManager(ABC):
     def __init__(self, db_manager=None):
         self.db_manager = db_manager if db_manager is not None else DatabaseManager()
 
@@ -88,14 +90,14 @@ class MemberManager(PersonManager):
             member_id = int(member_number)
             with self.db_manager.get_session(commit=True) as session:
                 member = session.query(Member).filter_by(id=member_id).first()
-                if member.is_valid:
-                    print ("\n🟢 Validated")
+                if member.status:
+                    print ("\nValidated")
                     return True
                 else:
-                    print ("\n🔴 Member Suspended")
+                    print ("\nMember Suspended")
                     return False        
         else:
-            print("\n⚠ Invalid Number")
+            print("\nInvalid Number")
             return False
 
 # Handles the management of ChocAn providers
@@ -115,5 +117,5 @@ class ProviderManager(PersonManager):
     def view_providers(self):
         super().view_persons(Provider)
     
-    def is_valid_provider(self, provider_number) -> bool:
+    def is_valid_provider(self, provider_number) -> bool: 
         return super().is_valid(Provider, provider_number)

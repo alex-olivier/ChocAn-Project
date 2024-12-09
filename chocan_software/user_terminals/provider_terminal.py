@@ -1,19 +1,22 @@
 import sys
-from chocan_software.database_manager import DatabaseManager
-from chocan_software.person_manager import MemberManager, ProviderManager
-from chocan_software.service_record_manager import ServiceRecordManager
-from chocan_software.service_manager import ServiceManager
+from chocan_software.data_managers.database_manager import DatabaseManager
+from chocan_software.data_managers.person_manager import MemberManager
+from chocan_software.data_managers.person_manager import ProviderManager
+from chocan_software.data_managers.service_manager import ServiceManager
+from chocan_software.data_managers.service_record_manager import ServiceRecordManager
 from chocan_software.string_utils import prompt_until_valid
 from chocan_software.constants import (
-    DATABASE_URL, ACCOUNT_NUM_LEN, SERVICE_CODE_LEN
+    DATABASE_URL, 
+    ACCOUNT_NUM_LEN, 
+    SERVICE_CODE_LEN
 )
 
 
 class ProviderTerminal:
     def __init__(self, db_url=None):
-        self.db_manager = DatabaseManager(db_url or DATABASE_URL)
+        self.db_manager = DatabaseManager(db_url if db_url is not None else DATABASE_URL)
         self.provider_manager = ProviderManager(self.db_manager)
-        self.person_manager = MemberManager(self.db_manager)
+        self.member_manager = MemberManager(self.db_manager)
         self.service_record_manager = ServiceRecordManager(self.db_manager)
         self.service_manager = ServiceManager(self.db_manager)
 
@@ -73,7 +76,7 @@ class ProviderTerminal:
     def run(self):
         provider_number = prompt_until_valid(
             rf'^\d{{{ACCOUNT_NUM_LEN}}}$',
-            ">> Enter provider number: ",
+            "Enter provider number: ",
             "Provider number must be 9 digits."
         )
         if self.provider_manager.is_valid_provider(provider_number):

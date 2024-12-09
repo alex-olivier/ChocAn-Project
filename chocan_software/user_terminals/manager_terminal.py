@@ -1,15 +1,19 @@
 import sys
-from chocan_software.interactive_mode import InteractiveMode
-from chocan_software.database_manager import DatabaseManager
-from chocan_software.report_manager import ReportManager
-from chocan_software.service_manager import ServiceManager
+from chocan_software.data_managers.database_manager import DatabaseManager
+from chocan_software.data_managers.report_manager import ReportManager
+from chocan_software.data_managers.service_manager import ServiceManager
+from chocan_software.user_terminals.interactive_mode import InteractiveMode
 from chocan_software.string_utils import prompt_until_valid
-from chocan_software.constants import DATABASE_URL, ACCOUNT_NUM_LEN
+from chocan_software.constants import (
+    DATABASE_URL, 
+    ACCOUNT_NUM_LEN
+)
 
 
 class ManagerTerminal:
     def __init__(self, db_url=None):
-        self.db_manager = DatabaseManager(db_url or DATABASE_URL)
+        
+        self.db_manager = DatabaseManager(db_url if db_url is not None else DATABASE_URL)
         self.report_manager = ReportManager(self.db_manager)
         self.interactive_mode = InteractiveMode(self.db_manager)
         self.service_manager = ServiceManager(self.db_manager)
