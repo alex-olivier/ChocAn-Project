@@ -21,13 +21,11 @@ from chocan_software.constants import (
     SERVICE_FEE_MAX, 
     SERVICERECORD_COMMENT_MAX_LEN
 )
-# This SQLAlchemy ORM syntax is now deprecated as of version 2.0
-# from sqlalchemy.ext.declarative import declarative_base  
-# Base = declarative_base()
 
 
 class Base(DeclarativeBase):
     pass
+
 
 class Member(Base):
     __tablename__ = 'members'
@@ -40,7 +38,12 @@ class Member(Base):
     zip_code = Column(String(ZIP_CODE_LEN), nullable=False)
     status = Column(Boolean, nullable=False)
 
+    service_records = relationship('ServiceRecord', backref='member')
+
+    # Delete if backref works as intended
+    """
     service_records = relationship('ServiceRecord', back_populates='member')
+    """
 
     __table_args__ = (
         CheckConstraint(f"length(name) <= {NAME_MAX_LEN}", name="check_name_length"),
@@ -95,8 +98,14 @@ class Provider(Base):
     state = Column(String(STATE_LEN), nullable=False)
     zip_code = Column(String(ZIP_CODE_LEN), nullable=False)
 
+    service_records = relationship('ServiceRecord', backref='provider')
+    provider_services = relationship('ProviderService', backref='provider')
+
+    # Delete if backref works as intended
+    """
     service_records = relationship('ServiceRecord', back_populates='provider')
     provider_services = relationship('ProviderService', back_populates='provider')
+    """
 
     __table_args__ = (
         CheckConstraint(f"length(name) <= {NAME_MAX_LEN}", name="check_name_length"),
@@ -144,9 +153,15 @@ class Service(Base):
     name = Column(String(SERVICE_NAME_MAX_LEN), nullable=False)
     fee = Column(Float, nullable=False)
 
+    service_records = relationship('ServiceRecord', backref='service')
+    provider_services = relationship('ProviderService', backref='service')
+
+    # Delete if backref works as intended
+    """
     service_records = relationship('ServiceRecord', back_populates='service')
     provider_services = relationship('ProviderService', back_populates='service')
-    
+    """
+
     __table_args__ = (
         CheckConstraint(f"length(name) <= {SERVICE_NAME_MAX_LEN}", name="check_service_name_length"),
         CheckConstraint(f"fee < {SERVICE_FEE_MAX}", name="check_service_fee_limit"),
@@ -180,8 +195,11 @@ class ProviderService(Base):
     provider_id = Column(Integer, ForeignKey('providers.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True)
     service_id = Column(Integer, ForeignKey('services.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True)
     
+    # Delete if backref works as intended
+    """
     provider = relationship('Provider', back_populates='provider_services')
     service = relationship('Service', back_populates='provider_services')
+    """
 
     def __init__(self, provider_id, service_id):
         """
@@ -215,9 +233,12 @@ class ServiceRecord(Base):
     comments = Column(String(SERVICERECORD_COMMENT_MAX_LEN))
     member = Column(Member, nullable=False)
 
+    # Delete if backref works as intended
+    """
     provider = relationship('Provider', back_populates='service_records')
     member = relationship('Member', back_populates='service_records')
     service = relationship('Service', back_populates='service_records')
+    """
 
     __table_args__ = (
         CheckConstraint(f"length(comments) <= {SERVICERECORD_COMMENT_MAX_LEN}", name="check_comments_length"),
