@@ -1,10 +1,10 @@
 import sys
-from database_manager import DatabaseManager
-from person_manager import MemberManager, ProviderManager
-from service_record_manager import ServiceRecordManager
-from service_manager import ServiceManager
-from string_utils import prompt_until_valid
-from constants import (
+from chocan_software.database_manager import DatabaseManager
+from chocan_software.person_manager import MemberManager, ProviderManager
+from chocan_software.service_record_manager import ServiceRecordManager
+from chocan_software.service_manager import ServiceManager
+from chocan_software.string_utils import prompt_until_valid
+from chocan_software.constants import (
     DATABASE_URL, ACCOUNT_NUM_LEN, SERVICE_CODE_LEN
 )
 

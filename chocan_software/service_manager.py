@@ -1,5 +1,5 @@
-from database_manager import DatabaseManager
-from models import Service
+from chocan_software.database_manager import DatabaseManager
+from chocan_software.models import Service
 
 class ServiceManager:
     def __init__(self, db_manager=None):

@@ -1,5 +1,5 @@
-from database_manager import DatabaseManager
-from models import Member, Provider
+from chocan_software.database_manager import DatabaseManager
+from chocan_software.models import Member, Provider
 
 
 # The base class for managing ChocAn persons (members and providers)

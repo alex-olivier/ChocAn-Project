@@ -1,6 +1,6 @@
-from models import Member, Provider, Service, ServiceRecord
-from database_manager import DatabaseManager
 from datetime import datetime
+from chocan_software.models import Member, Provider, Service, ServiceRecord
+from chocan_software.database_manager import DatabaseManager
 
 
 class ServiceRecordManager:

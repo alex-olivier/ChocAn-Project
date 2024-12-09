@@ -1,9 +1,9 @@
 import sys
-from database_manager import DatabaseManager
-from person_manager import MemberManager, ProviderManager
-from service_manager import ServiceManager
-from string_utils import prompt_until_valid
-from constants import (
+from chocan_software.database_manager import DatabaseManager
+from chocan_software.person_manager import MemberManager, ProviderManager
+from chocan_software.service_manager import ServiceManager
+from chocan_software.string_utils import prompt_until_valid
+from chocan_software.constants import (
     DATABASE_URL, NAME_MIN_LEN, NAME_MAX_LEN, STREET_ADDRESS_MIN_LEN,
     STREET_ADDRESS_MAX_LEN, CITY_MIN_LEN, CITY_MAX_LEN, STATE_LEN, ZIP_CODE_LEN,
     ACCOUNT_NUM_LEN, SERVICE_CODE_LEN, SERVICE_NAME_MIN_LEN, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX

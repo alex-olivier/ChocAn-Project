@@ -1,10 +1,10 @@
 import sys
-from interactive_mode import InteractiveMode
-from database_manager import DatabaseManager
-from report_manager import ReportManager
-from service_manager import ServiceManager
-from string_utils import prompt_until_valid
-from constants import DATABASE_URL, ACCOUNT_NUM_LEN
+from chocan_software.interactive_mode import InteractiveMode
+from chocan_software.database_manager import DatabaseManager
+from chocan_software.report_manager import ReportManager
+from chocan_software.service_manager import ServiceManager
+from chocan_software.string_utils import prompt_until_valid
+from chocan_software.constants import DATABASE_URL, ACCOUNT_NUM_LEN
 
 
 class ManagerTerminal:

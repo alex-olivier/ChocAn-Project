@@ -2,7 +2,6 @@
 #     Column, Integer, String, Float, Boolean, CheckConstraint, UniqueConstraint, 
 #     ForeignKey, DateTime, func
 # )
-from typing import overload
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
@@ -15,7 +14,7 @@ from sqlalchemy import DateTime
 from sqlalchemy import func
 from sqlalchemy.orm import DeclarativeBase 
 from sqlalchemy.orm import relationship
-from constants import (
+from chocan_software.constants import (
     NAME_MAX_LEN, STREET_ADDRESS_MAX_LEN, CITY_MAX_LEN, STATE_LEN, ZIP_CODE_LEN,
     MEMBER_STATUS_ACTIVE, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX, SERVICERECORD_COMMENT_MAX_LEN
 )

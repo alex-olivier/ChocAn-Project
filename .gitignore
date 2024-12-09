@@ -6,3 +6,5 @@
 /service_records
 /test_data_backup
 /_unused_code
+/*/__pycache__
+/*/.pytest_cache
