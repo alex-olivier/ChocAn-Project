@@ -3,7 +3,7 @@ from models import Service
 
 class ServiceManager:
     def __init__(self, db_manager=None):
-        self.db_manager = (db_manager or DatabaseManager())
+        self.db_manager = db_manager if db_manager is not None else DatabaseManager()
 
     def add_service(self, name, fee):
         with self.db_manager.get_session(commit=True) as session:

@@ -7,7 +7,7 @@ from sqlalchemy import func
 
 class ReportManager:
     def __init__(self, db_manager=None):
-        self.db_manager = (db_manager or DatabaseManager())
+        self.db_manager = db_manager if db_manager is not None else DatabaseManager()
         self.reports_dir = os.path.join(os.path.dirname(__file__), "reports")
         os.makedirs(self.reports_dir, exist_ok=True)
 

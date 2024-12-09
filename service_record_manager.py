@@ -5,7 +5,7 @@ from datetime import datetime
 
 class ServiceRecordManager:
     def __init__(self, db_manager=None):
-        self.db_manager = (db_manager or DatabaseManager())
+        self.db_manager = db_manager if db_manager is not None else DatabaseManager()
 
     def add_service_record(self, provider_number, member_number, service_code, date_of_service, comments=None):
         provider_id = int(provider_number)

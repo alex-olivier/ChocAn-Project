@@ -1,3 +1,4 @@
+"""
 from models import (
     Person, 
     Member, 
@@ -14,14 +15,11 @@ from constants import (
     SERVICE_NAME_MAX_LEN,
     SERVICE_FEE_MAX
 )
-
-# @listens_for(Member, "before_insert")
-# def set_member_status(_mapper, _connection, target):
-#     target.status = True
-
+"""
 
 # Event Listeners to perform validation in Python so errors can be 
 # caught and handled before the changes are commit to the DB.
+"""
 @listens_for(Member, "before_insert")
 @listens_for(Member, "before_update")
 @listens_for(Provider, "before_insert")
@@ -37,12 +35,23 @@ def validate_person(_mapper, _connection, target):
         raise ValueError("State must include 2 uppercase letters.")
     if not (len(target.zip_code) == ZIP_CODE_LEN and target.zip_code.isdigit()):
         raise ValueError("Zip code must include 5 digits.")
+"""
 
 
-# Use this when a Person model is queried
-# @listens_for(Person, "before_update")
+
+
+# Use this when a Member/Provider model is updated
+# @listens_for(Member, "before_update")
+# @listens_for(Provider, "before_update")
+# @listens_for(Service, "before_update")
+
+
 
 # @listens_for(Member, "before_update")
 # @listens_for(Provider, "before_update")
 # def validate_person_update(_mapper, _connection, target):
 
+# Goes above the validate_person function (order matters w/ event listeners)
+# @listens_for(Member, "before_insert")
+# def set_member_status(_mapper, _connection, target):
+#     target.status = True

@@ -1,16 +1,31 @@
-from sqlalchemy import (
-    Column, Integer, String, Float, Boolean, CheckConstraint, UniqueConstraint, 
-    ForeignKey, DateTime, func
-)
-from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy import (
+#     Column, Integer, String, Float, Boolean, CheckConstraint, UniqueConstraint, 
+#     ForeignKey, DateTime, func
+# )
+from typing import overload
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import Float
+from sqlalchemy import Boolean
+from sqlalchemy import CheckConstraint
+from sqlalchemy import UniqueConstraint
+from sqlalchemy import ForeignKey
+from sqlalchemy import DateTime
+from sqlalchemy import func
+from sqlalchemy.orm import DeclarativeBase 
 from sqlalchemy.orm import relationship
 from constants import (
     NAME_MAX_LEN, STREET_ADDRESS_MAX_LEN, CITY_MAX_LEN, STATE_LEN, ZIP_CODE_LEN,
     MEMBER_STATUS_ACTIVE, SERVICE_NAME_MAX_LEN, SERVICE_FEE_MAX, SERVICERECORD_COMMENT_MAX_LEN
 )
+# This SQLAlchemy ORM syntax is now deprecated as of version 2.0
+# from sqlalchemy.ext.declarative import declarative_base  
+# Base = declarative_base()
 
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 class Member(Base):
     __tablename__ = 'members'
@@ -52,7 +67,7 @@ class Member(Base):
         self.city = city
         self.state = state
         self.zip_code = zip_code
-        self.status = (status or MEMBER_STATUS_ACTIVE)
+        self.status = status if status is not None else MEMBER_STATUS_ACTIVE
     
 
 class Provider(Base):
@@ -69,6 +84,11 @@ class Provider(Base):
     provider_services = relationship('ProviderService', back_populates='provider')
 
     __table_args__ = (
+        CheckConstraint(f"length(name) <= {NAME_MAX_LEN}", name="check_name_length"),
+        CheckConstraint(f"length(street_address) <= {STREET_ADDRESS_MAX_LEN}", name="check_street_address_length"),
+        CheckConstraint(f"length(city) <= {CITY_MAX_LEN}", name="check_city_length"),
+        CheckConstraint(f"length(state) = {STATE_LEN} AND state GLOB '[A-Z]*'", name="check_state_format"),
+        CheckConstraint(f"length(zip_code) = {ZIP_CODE_LEN} AND zip_code GLOB '[0-9]*'", name="check_zip_code_format"),
         UniqueConstraint('name', 'street_address', 'city', 'state', 'zip_code', name='unique_provider'),
     )
 

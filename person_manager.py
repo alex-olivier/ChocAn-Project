@@ -5,7 +5,7 @@ from models import Member, Provider
 # The base class for managing ChocAn persons (members and providers)
 class PersonManager:
     def __init__(self, db_manager=None):
-        self.db_manager = (db_manager or DatabaseManager())
+        self.db_manager = db_manager if db_manager is not None else DatabaseManager()
 
     def add_person(self, person_class, name, street_address, city, state, zip_code):
         with self.db_manager.get_session(commit=True) as session:

@@ -4,3 +4,4 @@
 /.pytest_cache
 /reports
 /service_records
+/test_data_backup

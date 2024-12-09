@@ -12,7 +12,7 @@ from constants import (
 
 class InteractiveMode:
     def __init__(self, db_manager=None):
-        self.db_manager = (db_manager or DatabaseManager())
+        self.db_manager = db_manager if db_manager is not None else DatabaseManager()
         self.member_manager = MemberManager(self.db_manager)
         self.provider_manager = ProviderManager(self.db_manager)
         self.service_manager = ServiceManager(self.db_manager)
