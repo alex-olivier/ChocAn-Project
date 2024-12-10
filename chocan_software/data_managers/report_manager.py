@@ -9,14 +9,20 @@ from chocan_software.data_managers.database_manager import DatabaseManager
 
 
 class ReportManager:
+    """
+    ReportManager contains methods for managing the generation of reports, EFT
+    Data, and the Provider Directory.
+    """
     def __init__(self, db_manager=None):
         self.db_manager = db_manager if db_manager is not None else DatabaseManager()
         self.reports_dir = os.path.join(os.path.dirname(__file__), "../../reports")
         os.makedirs(self.reports_dir, exist_ok=True)
 
-
-    # Generates weekly member report
     def generate_member_report(self, member_number):
+        """
+        Generates weekly member report containing all the services they have
+        received in the past week.
+        """
         member_id = int(member_number)
         one_week_ago = datetime.now() - timedelta(days=7)
         
@@ -30,7 +36,6 @@ class ReportManager:
                 ServiceRecord.service_date >= one_week_ago
             ).order_by(ServiceRecord.service_date).all()
             if not records:
-                # print("\nNo services recorded for this member.")
                 return
 
             report_filename = os.path.join(
@@ -66,8 +71,11 @@ class ReportManager:
                     )
             print(f"Member report generated: {report_filename}")
 
-    # Generates weekly report for Providers
     def generate_provider_report(self, provider_number):
+        """
+        Generates weekly report for Providers containing all the services they
+        have provided to members in the past week.
+        """
         provider_id = int(provider_number)
         one_week_ago = datetime.now() - timedelta(days=7)
         with self.db_manager.get_session() as session:
@@ -80,7 +88,6 @@ class ReportManager:
                 ServiceRecord.service_date >= one_week_ago
             ).order_by(ServiceRecord.service_date).all()
             if not records:
-                # print("No services recorded for this provider in the past week.")
                 return
 
             report_filename = os.path.join(
@@ -126,7 +133,6 @@ class ReportManager:
                 file.write(f"Total Fee: $ {total_weekly_fee:.2f}\n")
             print(f"Provider report generated: {report_filename}")
 
-    # Accounts Payable Summary Report for a Manager
     def generate_summary_report(self):
         """
         A summary report is given to the manager for accounts payable.
@@ -186,9 +192,12 @@ class ReportManager:
                 )
         print(f"Summary report generated: {report_filename}")
 
-    # For the EFT data, all that is required is that a file be set up containing
-    # the provider name, provider number, and the amount to be transferred.
     def generate_eft_data(self):
+        """
+        Generates a file containing EFT data meant for the payment processor.
+        The file contains the provider name, provider number, and the amount to
+        be transferred.
+        """
         one_week_ago = datetime.now() - timedelta(days=7)
 
         with self.db_manager.get_session() as session:
@@ -199,6 +208,7 @@ class ReportManager:
                 f"EFT_Data_{datetime.now().strftime('%Y%m%d')}.txt"
             )
             with open(eft_filename, 'w') as file:
+                file.write("provider_name,provider_number,amount\n")
                 for provider in providers:
                     records = session.query(ServiceRecord).filter(
                         ServiceRecord.provider_id == provider.id,
@@ -216,6 +226,11 @@ class ReportManager:
         print(f"EFT data generated: {eft_filename}")
 
     def main_accounting_procedure(self):
+        """
+        Main accounting procedure runs reports for all providers and members with
+        service records from the past week, generates the EFT data, and generates
+        the summary report.
+        """
         with self.db_manager.get_session() as session:
             providers = session.query(Provider).all()
             for provider in providers:
@@ -226,9 +241,12 @@ class ReportManager:
         self.generate_eft_data()
         self.generate_summary_report()
         print("Main accounting procedure complete.")
-
-    # Generates Provider Directory
+  
     def generate_provider_directory(self):
+        """
+        Generates Provider Directory which contains a list of all the services,
+        their codes, and their fees.
+        """
         with self.db_manager.get_session() as session:
             services = session.query(Service).all()
             
