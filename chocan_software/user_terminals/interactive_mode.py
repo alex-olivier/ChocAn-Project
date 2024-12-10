@@ -409,5 +409,3 @@ class InteractiveMode:
             else: # Catch all
                 print("\nError occurred. Exiting...")
                 sys.exit(1)
-
-        
