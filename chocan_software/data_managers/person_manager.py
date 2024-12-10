@@ -10,14 +10,16 @@ from chocan_software.constants import (
 )
 
 
-# The base class for managing ChocAn persons (members and providers)
-# NOTE: My Member and Provider models previously utilized polymorphism. I've since
-#       removed it to make it easier on myself, but this ABC is a vestigil
-#       structure from that if you were wondering ().
 class PersonManager(ABC):
+    """
+    The base class containing methods for managing both members and providers.
+    My Member and Provider models previously utilized polymorphism. I've since
+    removed it to make it easier on myself and this ABC is a vestigil structure
+    from that (if you were wondering why there are no abstract methods).
+    """
     def __init__(self, db_manager=None):
         self.db_manager = db_manager if db_manager is not None else DatabaseManager()
-
+    
     def add_person(self, person_class, name, street_address, city, state, zip_code):
         with self.db_manager.get_session(commit=True) as session:
             new_person = person_class(
