@@ -30,8 +30,7 @@ Service Record constants:
 """
 
 # Database constants
-DATABASE_URL = "sqlite:///test_data.db"
-# DATABASE_URL = "sqlite:///chocan.db"
+DATABASE_URL = "sqlite:///chocan.db"
 
 # Member/Provider constants
 ACCOUNT_NUM_LEN = 9
