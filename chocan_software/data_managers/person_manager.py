@@ -1,6 +1,8 @@
 from abc import ABC
 from chocan_software.models import Member
 from chocan_software.models import Provider
+from chocan_software.models import ProviderService
+from chocan_software.models import Service
 from chocan_software.data_managers.database_manager import DatabaseManager
 from chocan_software.constants import (
     MEMBER_STATUS_ACTIVE,
@@ -56,6 +58,22 @@ class PersonManager(ABC):
 
             session.delete(person)
             print(f"\nDeleted {person_class.__name__.lower()}.")
+
+    def get_person(self, person_class, person_number):
+        person_id = int(person_number)  # int conversion to strip leading zeroes
+        with self.db_manager.get_session() as session:
+            person = session.query(person_class).filter_by(
+                id=person_id
+            ).first()
+            return person
+
+    def is_valid(self, person_class, person_number):
+        person_id = int(person_number)  # int conversion to strip leading zeroes
+        with self.db_manager.get_session() as session:
+            person = session.query(person_class).filter_by(
+                id=person_id
+            ).first()
+            return person
         
     def view_persons(self, person_class):
         with self.db_manager.get_session() as session:
@@ -64,15 +82,7 @@ class PersonManager(ABC):
                 print(f"\nNo {person_class.__name__.lower()}s found.")
             else:
                 for person in persons:
-                    print(f"{person.name}, {person.id:09}")
-
-    def is_valid(self, person_class, person_number):
-        person_id = int(person_number)  # int conversion to strip leading zeroes
-        with self.db_manager.get_session() as session:
-            person = session.query(person_class).filter_by(
-                id=person_id
-            ).first()
-            return person if not None else None
+                    print(f"  {person.id:09}: {person.name}")
 
 
 # Handles the management of ChocAn members
@@ -89,8 +99,8 @@ class MemberManager(PersonManager):
     def delete_member(self, member_number):
         super().delete_person(Member, member_number)
 
-    def view_members(self):
-        super().view_persons(Member)
+    def get_member(self, member_number):
+        return super().get_person(Member, member_number)
 
     def is_valid_member(self, member_number) -> bool:
         member = super().is_valid(Member, member_number)
@@ -104,6 +114,10 @@ class MemberManager(PersonManager):
                 return False        
         else:
             return None
+        
+    def view_members(self):
+        super().view_persons(Member)
+
 
 # Handles the management of ChocAn providers
 class ProviderManager(PersonManager):
@@ -119,8 +133,27 @@ class ProviderManager(PersonManager):
     def delete_provider(self, provider_number):
         super().delete_person(Provider, provider_number)
 
+    def get_provider(self, provider_number):
+        return super().get_person(Provider, provider_number)
+    
+    def is_valid_provider(self, provider_number) -> bool:
+        return super().is_valid(Provider, provider_number) is not None
+
     def view_providers(self):
         super().view_persons(Provider)
     
-    def is_valid_provider(self, provider_number) -> bool: 
-        return super().is_valid(Provider, provider_number)
+    def get_provider_services(self, provider_number):
+        provider_id = int(provider_number)
+        with self.db_manager.get_session() as session:
+            services = session.query(Service).join(ProviderService).filter(
+                ProviderService.provider_id == provider_id
+            ).all()
+            return services
+    
+    def add_provider_service(self, provider_number, service_code):
+        provider_id = int(provider_number)
+        service_id = int(service_code)
+        with self.db_manager.get_session(commit=True) as session:
+            new_provider_service = ProviderService(provider_id, service_id)
+            session.add(new_provider_service)
+            print("\nAdded provider service.")

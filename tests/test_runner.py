@@ -18,13 +18,15 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), "valid_test_data")
 @pytest.fixture(scope="function")
 def test_database():
     # Create an in-memory SQLite database
-    engine = create_engine("sqlite:///:memory:")
+    engine = create_engine("sqlite:///test_data.db")
+    #engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
     yield session
+    session.flush()
     session.close()
-    Base.metadata.drop_all(engine)
+    # Base.metadata.drop_all(engine)
 
 def load_csv_to_table(csv_filename, model_class, session):
     """Utility function to load CSV data into a database table."""

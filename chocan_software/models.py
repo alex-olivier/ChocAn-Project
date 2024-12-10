@@ -185,7 +185,7 @@ class Service(Base):
         return (
             f"Service(id={self.id:06}, "
             f"name={self.name!r}, "
-            f"fee={self.fee})"
+            f"fee={self.fee:.2f})"
         )
 
 
@@ -231,7 +231,6 @@ class ServiceRecord(Base):
     service_date = Column(DateTime, nullable=False)  # Use DateTime for service_date
     timestamp = Column(DateTime, nullable=False, default=func.now())  # Automatically generate timestamp
     comments = Column(String(SERVICERECORD_COMMENT_MAX_LEN))
-    member = Column(Member, nullable=False)
 
     # Delete if backref works as intended
     """
@@ -246,7 +245,7 @@ class ServiceRecord(Base):
         UniqueConstraint('provider_id', 'member_id', 'service_id', 'service_date', name='unique_service_record'),
     )
 
-    def __init__(self, provider_id, member_id, service_id, service_date, comments=None):
+    def __init__(self, provider_id, member_id, service_id, service_date, timestamp=None, comments=None):
         """
         Initializes a ServiceRecord instance.
         :param provider_id: ID of the provider.
@@ -259,6 +258,7 @@ class ServiceRecord(Base):
         self.member_id = member_id
         self.service_id = service_id
         self.service_date = service_date
+        self.timestamp = timestamp if timestamp is not None else func.now()
         self.comments = comments
 
     def __repr__(self) -> str:

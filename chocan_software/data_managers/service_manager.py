@@ -1,5 +1,6 @@
 from chocan_software.models import Service
 from chocan_software.data_managers.database_manager import DatabaseManager
+from chocan_software.models import ProviderService
 
 class ServiceManager:
     def __init__(self, db_manager=None):
@@ -30,14 +31,18 @@ class ServiceManager:
         service_id = int(service_code)
         with self.db_manager.get_session(commit=True) as session:
             service = session.query(Service).filter_by(id=service_id).first()
-
             if not service:
                 print(f"\nService with code {service_code} not found.")
                 return
-
             session.delete(service)
             print(f"\nDeleted service.")
 
+    def get_service(self, service_code):
+        service_id = int(service_code)
+        with self.db_manager.get_session() as session:
+            service = session.query(Service).filter_by(id=service_id).first()
+            return service
+        
     def view_services(self):
         with self.db_manager.get_session() as session:
             services = session.query(Service).all()
@@ -45,4 +50,4 @@ class ServiceManager:
                 print("\nNo services found.")
             else:
                 for service in services:
-                    print(f"  {service.id:06}: {service.name:<20} - ${service.fee:6.2f}")
+                    print(f"  {service.id:06}: {service.name:<20} ${service.fee:>6.2f}")
