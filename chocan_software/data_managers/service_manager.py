@@ -1,8 +1,11 @@
 from chocan_software.models import Service
 from chocan_software.data_managers.database_manager import DatabaseManager
-from chocan_software.models import ProviderService
+
 
 class ServiceManager:
+    """
+    The ServiceManager class contains methods for managing services.
+    """
     def __init__(self, db_manager=None):
         self.db_manager = db_manager if db_manager is not None else DatabaseManager()
 
