@@ -1,4 +1,0 @@
-name,street_address,city,state,zip_code,status
-,123 Main St,Springfield,XY,ABCDE,True
-John Doe,,TooLongCityNameExceeds14,CALI,12345,active
-Jane Doe,456 Elm St,Metropolis,CA,12@45,

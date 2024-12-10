@@ -1,4 +1,0 @@
-name,fee
-VeryLongServiceNameExceedingTwentyChars,100.0
-NegativeFeeService,-50.0
-ZeroFeeService,0.0

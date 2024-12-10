@@ -1,4 +1,0 @@
-name,street_address,city,state,zip_code
-ANameThatIsWayTooLongForThisField,789 Oak St,Smalltown,NY,12345
-Jane Doe,123 Pine St,InvalidCityNameThatExceeds14,CA,ABCDE
-Invalid Provider,,CityName,XY,12@45

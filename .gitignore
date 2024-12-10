@@ -4,11 +4,9 @@
 /.pytest_cache
 /reports
 /service_records
-/test_data_backup
 /_unused_code
+/tests/*
 /*/__pycache__
 /*/.pytest_cache
 /*/*/__pycache__
 /test_data.db
-/*.db
-/tests
