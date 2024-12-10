@@ -82,16 +82,6 @@ class ProviderTerminal:
             print("Service Record Added")
             break
 
-    # def add_service_record(self, provider_number, member_number, service_code, date_of_service, comments):
-    #     """Add a service record."""
-    #     self.service_record_manager.add_service_record(
-    #         provider_number=provider_number,
-    #         member_number=member_number,
-    #         service_code=service_code,
-    #         date_of_service=date_of_service,
-    #         comments=comments
-    #     )
-
     @staticmethod
     def is_valid_date(date_string):
         """Validate date format."""
